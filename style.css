@@ -810,29 +810,53 @@ footer.valley-footer{
 }
 @media(max-width:750px){
  .footer-valley-stage{
-  display:block
+  display:flex;
+  flex-direction:column;
+  align-items:center
  }
  .footer-center{
+  order:1;
   width:92%;
-  padding:32px 12px 12px;
-  gap:14px
+  padding:48px 14px 24px;
+  gap:16px
  }
  .footer-brand .logo{
-  height:92px
+  height:96px
+ }
+ .footer-nav{
+  position:static!important;
+  top:auto!important;
+  left:auto!important;
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  background:transparent!important;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:14px 0 12px!important;
+  gap:10px 18px
  }
  .footer-scene{
-  margin-top:-12px
+  order:2;
+  width:100%;
+  margin-top:8px
  }
  .footer-landscape{
-  min-height:260px;
-  object-fit:cover
+  width:100%;
+  height:auto;
+  min-height:210px;
+  object-fit:cover;
+  object-position:center bottom
  }
  .valley-footer .footer-bottom{
   position:relative;
   background:#182616;
   flex-direction:column;
   text-align:center;
-  padding:18px 6% 22px;
+  padding:18px 6% 24px;
   gap:12px
  }
 }
@@ -1615,4 +1639,129 @@ footer.valley-footer{
  .page-loader{padding:12px}
  .loader-top{font-size:8.5px;letter-spacing:1.4px}
  .loader-art-stage{width:min(320px,76vw)}
+
+ /* 1. Keep hero film switcher single-line inside the video and place the gold seal cleanly below the video without overlap. */
+ .film-switcher{
+  bottom:16px;
+  left:50%;
+  right:auto;
+  transform:translateX(-50%);
+  white-space:nowrap
+ }
+ .film-switch{
+  white-space:nowrap;
+  padding:8px 13px;
+  font-size:8.5px
+ }
+ .intro-centred{
+  --intro-seal-size:128px;
+  padding:32px 6% 48px
+ }
+ .intro-seal{
+  position:relative;
+  top:auto;
+  left:auto;
+  display:block;
+  margin:0 auto 22px;
+  transform:rotate(var(--seal-turn,0deg))
+ }
+
+ /* 2. Sensory Quality (#quality): place rice bowl right below heading and turn the 3 items into left-to-right swipeable cards. */
+ .quality-experience{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:16px;
+  padding-top:42px
+ }
+ .quality-copy{
+  display:contents
+ }
+ .quality-copy>.eyebrow{
+  order:1;
+  text-align:center
+ }
+ .quality-copy>h2{
+  order:2;
+  text-align:center;
+  font-size:clamp(32px,9vw,40px);
+  margin:2px 0 4px
+ }
+ .quality-media.plate-showcase{
+  order:3;
+  width:min(70vw,245px);
+  margin:0 auto;
+  padding:0
+ }
+ .quality-stage.plate-stage{
+  width:100%
+ }
+ .quality-features{
+  order:4;
+  width:100%;
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:85%;
+  gap:14px;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  padding:8px 4px 18px;
+  margin:0 -4px
+ }
+ .quality-features::-webkit-scrollbar{
+  display:none
+ }
+ .quality-item{
+  scroll-snap-align:center;
+  background:#ffffff;
+  border:1px solid rgba(190,39,38,.18);
+  border-radius:20px;
+  padding:18px 18px 16px;
+  box-shadow:0 10px 24px rgba(48,16,14,.06);
+  display:flex;
+  flex-direction:column
+ }
+ .quality-item.is-active{
+  background:#ffffff;
+  border-color:var(--ink);
+  box-shadow:0 14px 30px rgba(190,39,38,.14)
+ }
+ .quality-trigger{
+  padding:0 0 8px;
+  gap:10px;
+  align-items:baseline
+ }
+ .quality-title{
+  font-size:23px
+ }
+ .quality-sign{
+  display:none
+ }
+ .quality-summary{
+  margin:0;
+  font-size:13.5px;
+  line-height:1.58
+ }
+ .quality-more,
+ .quality-item.is-active .quality-more{
+  grid-template-rows:1fr;
+  opacity:1
+ }
+ .quality-more p{
+  margin:10px 0 12px;
+  font-size:13px;
+  line-height:1.58
+ }
+ .quality-tag{
+  margin:0;
+  font-size:9.5px
+ }
+ .quality-hint{
+  order:5;
+  justify-content:center;
+  margin-top:0
+ }
 }

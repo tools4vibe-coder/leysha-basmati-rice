@@ -545,6 +545,12 @@ qualityButtons.forEach(button => {
   button.addEventListener('focus', () => showQuality(button.dataset.quality));
   button.addEventListener('click', () => {
     const key = button.dataset.quality;
+    const item = button.closest('.quality-item');
+    if (window.innerWidth <= 650 && item) {
+      item.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+      showQuality(key);
+      return;
+    }
     if (qualityActive === key) {
       qualityHoverSuppressed = true;
       showQuality('plain');
@@ -553,6 +559,27 @@ qualityButtons.forEach(button => {
     }
   });
 });
+
+let qualityScrollRaf = 0;
+qualityFeatures.addEventListener('scroll', () => {
+  if (window.innerWidth > 650 || qualityScrollRaf) return;
+  qualityScrollRaf = requestAnimationFrame(() => {
+    qualityScrollRaf = 0;
+    const trackRect = qualityFeatures.getBoundingClientRect();
+    const trackCenter = trackRect.left + trackRect.width * 0.5;
+    let closestKey = null;
+    let closestDist = Infinity;
+    qualityFeatures.querySelectorAll('[data-quality-item]').forEach(item => {
+      const rect = item.getBoundingClientRect();
+      const dist = Math.abs((rect.left + rect.width * 0.5) - trackCenter);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestKey = item.dataset.qualityItem;
+      }
+    });
+    if (closestKey) showQuality(closestKey);
+  });
+}, {passive: true});
 qualityFeatures.addEventListener('pointerleave', event => {
   if (event.pointerType === 'mouse' && !qualityHoverSuppressed) showQuality('plain');
 });
