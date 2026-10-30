@@ -929,12 +929,12 @@ footer.valley-footer{
 .social-card.is-vertical{
  display:flex;
  flex-direction:column;
- min-height:485px
+ min-height:468px
 }
 .social-card.is-horizontal{
  display:grid;
- grid-template-columns:45% 55%;
- min-height:485px;
+ grid-template-columns:58% 42%;
+ min-height:468px;
  background:#ffffff
 }
 .social-card>.media{
@@ -944,8 +944,9 @@ footer.valley-footer{
  background:#231815
 }
 .social-card.is-vertical>.media{
- height:248px;
- flex:none
+ height:306px;
+ min-height:300px;
+ flex:1 1 65%
 }
 .social-card.is-horizontal>.media{
  height:100%;
@@ -959,10 +960,10 @@ footer.valley-footer{
  transition:transform .65s cubic-bezier(.22,1,.36,1)
 }
 .social-card>.media img.insta-img-yami{
- object-position:center 20%
+ object-position:center 16%
 }
 .social-card>.media img.insta-img-reel{
- object-position:center 52%
+ object-position:center 50%
 }
 .social-card>.media img.blog-img-cover{
  object-position:center center
@@ -1028,38 +1029,44 @@ footer.valley-footer{
 .social-card-body{
  display:flex;
  flex-direction:column;
- flex:1;
+ flex:0 0 auto;
  background:#ffffff;
- padding:22px 24px 20px;
+ padding:16px 20px 14px;
  min-width:0
 }
 .social-card.is-horizontal .social-card-body{
- padding:28px 32px 24px;
+ flex:1;
+ padding:22px 24px 18px;
  justify-content:space-between
 }
 .social-card-head{
  display:flex;
  flex-direction:column;
- gap:9px;
- margin-bottom:12px
+ gap:6px;
+ margin-bottom:8px
 }
 .social-handle{
- font-size:10.5px;
+ font-size:10px;
  font-weight:700;
- letter-spacing:1.6px;
+ letter-spacing:1.5px;
  color:var(--muted);
  text-transform:uppercase
 }
 .social-card h3{
- font:400 clamp(22px,1.95vw,27px)/1.18 var(--serif);
+ font:400 clamp(20px,1.72vw,24px)/1.18 var(--serif);
  letter-spacing:-.3px;
  margin:0;
  color:var(--ink);
- text-wrap:balance
+ text-wrap:balance;
+ display:-webkit-box;
+ -webkit-line-clamp:2;
+ -webkit-box-orient:vertical;
+ overflow:hidden
 }
 .social-card.is-horizontal h3{
- font-size:clamp(26px,2.35vw,34px);
- line-height:1.14
+ font-size:clamp(22px,1.95vw,28px);
+ line-height:1.16;
+ -webkit-line-clamp:3
 }
 .social-card .card-link{
  background:none;
@@ -1088,42 +1095,46 @@ footer.valley-footer{
 }
 .social-card-copy{
  padding:0;
- margin:0 0 16px;
- font-size:14.5px;
- line-height:1.64;
+ margin:0 0 12px;
+ font-size:13.5px;
+ line-height:1.52;
  color:var(--muted);
- text-wrap:pretty
+ text-wrap:pretty;
+ display:-webkit-box;
+ -webkit-line-clamp:2;
+ -webkit-box-orient:vertical;
+ overflow:hidden
 }
 .social-card.is-horizontal .social-card-copy{
- font-size:15.5px;
- line-height:1.68;
- margin-bottom:18px
+ font-size:14.5px;
+ line-height:1.56;
+ margin-bottom:14px
 }
 .blog-bento-tags{
  display:flex;
  flex-wrap:wrap;
- gap:8px;
- margin:auto 0 18px
+ gap:6px;
+ margin:auto 0 14px
 }
 .blog-bento-tags span{
- padding:6px 12px;
+ padding:5px 10px;
  border-radius:999px;
  background:#fff5ec;
  border:1px solid rgba(190,39,38,.18);
  color:var(--ink);
- font-size:9.5px;
+ font-size:9px;
  font-weight:700;
- letter-spacing:1.2px
+ letter-spacing:1.1px
 }
 .social-card-foot{
- padding-top:15px;
+ padding-top:11px;
  margin-top:auto;
  border-top:1px solid rgba(190,39,38,.14);
  display:flex;
  justify-content:space-between;
  align-items:center;
  gap:10px;
- font-size:10.5px;
+ font-size:10px;
  font-weight:700;
  letter-spacing:1.2px;
  text-transform:uppercase;

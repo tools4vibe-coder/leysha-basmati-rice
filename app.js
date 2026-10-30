@@ -785,7 +785,10 @@ async function syncLatestSsielBlogPost() {
       return (doc.body.textContent || '').trim();
     };
     if (post.title?.rendered) {
-      titleEl.textContent = decodeHtml(post.title.rendered);
+      const rawTitle = decodeHtml(post.title.rendered).replace(/\s+/g, ' ');
+      titleEl.textContent = rawTitle.length > 68
+        ? `${rawTitle.slice(0, 65).replace(/[,:\s]+\S*$/, '')}…`
+        : rawTitle;
     }
     if (post.link) {
       titleEl.href = post.link;
@@ -793,8 +796,8 @@ async function syncLatestSsielBlogPost() {
     if (post.excerpt?.rendered) {
       const cleanExcerpt = decodeHtml(post.excerpt.rendered).replace(/\s+/g, ' ');
       if (cleanExcerpt) {
-        excerptEl.textContent = cleanExcerpt.length > 220
-          ? `${cleanExcerpt.slice(0, 217).replace(/\s+\S*$/, '')}…`
+        excerptEl.textContent = cleanExcerpt.length > 110
+          ? `${cleanExcerpt.slice(0, 107).replace(/\s+\S*$/, '')}…`
           : cleanExcerpt;
       }
     }
