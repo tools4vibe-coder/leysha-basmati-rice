@@ -260,7 +260,7 @@ header .nav-item:after{opacity:.4}
 .grain-scroll[data-scene="1"] .grain-scene-label,.grain-scroll[data-scene="1"] .grain-scroll-footer{color:var(--ink)}
 .grain-callout{opacity:1;top:39%;width:25%;transform:none}
 .grain-callout>svg{stroke:currentColor}
-.grain-scene-1 .grain-callout>img{filter:brightness(0) saturate(100%) invert(22%) sepia(77%) saturate(2250%) hue-rotate(343deg) brightness(89%) contrast(95%)}
+.grain-scene-1 .grain-callout>img{filter:none}
 .grain-scroll[data-scene="1"] .grain-progress{background:#be272633}.grain-scroll[data-scene="1"] .grain-progress i{background:var(--ink)}
 @media(max-width:650px){.grain-scene{height:calc(100svh - 72px)}.grain-backtype{font-size:24vw;top:35%;opacity:.28}.grain-callout{top:auto;bottom:65px;width:70%}.grain-scene-label{top:24px;left:6%}#grain-canvas{top:37%;height:72%}}
 
@@ -275,9 +275,9 @@ header .nav-item:after{opacity:.4}
 /* Independent depth: words drift slowly, annotations travel faster, and dots sit above the grain. */
 .grain-backtype{transform:translate(-50%,calc(-50% + var(--word-drift,0px)));will-change:transform}
 #grain-canvas{z-index:1}
-.grain-scroll-stage>.grain-callout{z-index:3;top:36%;color:var(--paper);transform:translateY(calc(var(--callout-drift,0px) + (1 - var(--reveal,0))*35px));will-change:transform,opacity}
+.grain-scroll-stage>.grain-callout{z-index:3;top:33%;color:var(--paper);transform:translateY(calc(var(--callout-drift,0px) + (1 - var(--reveal,0))*35px));will-change:transform,opacity}
 .grain-scroll-stage>.grain-callout[data-stage="1"]{color:var(--ink)}
-.grain-scroll-stage>.grain-callout[data-stage="1"]>img{filter:brightness(0) saturate(100%) invert(22%) sepia(77%) saturate(2250%) hue-rotate(343deg) brightness(89%) contrast(95%)}
+.grain-scroll-stage>.grain-callout[data-stage="1"]>img{filter:none}
 .grain-callout>svg{width:80%;clip-path:none;opacity:var(--reveal,0)}
 .grain-callout>svg path{path-length:1;stroke-dasharray:400;stroke-dashoffset:calc((1 - var(--reveal,0))*400)}
 .grain-callout>svg circle{fill:currentColor;stroke:currentColor;stroke-width:2;opacity:var(--reveal,0)}
@@ -285,12 +285,12 @@ header .nav-item:after{opacity:.4}
 
 /* Scroll choreography: form the ring on the grain, draw outward, then reveal the copy. */
 .grain-scroll-stage>.grain-callout{opacity:var(--text-reveal,0);width:28%;max-width:410px}
-.grain-callout>img{width:88px;height:88px}
+.grain-callout>img{width:128px;height:128px;object-fit:contain;margin-bottom:14px}
 .grain-leader{position:absolute;inset:0;width:100%;height:100%;z-index:4;overflow:visible;pointer-events:none;color:var(--paper);fill:none;stroke:currentColor;stroke-width:2}
 .grain-leader[data-stage="1"]{color:var(--ink)}
 .grain-leader path{stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--line,0));opacity:var(--line,0)}
 .grain-leader circle{stroke-width:2.5;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--ring,0));opacity:var(--ring,0);transform-box:fill-box;transform-origin:center;transform:scale(calc(.45 + var(--ring,0)*.55))}
-@media(max-width:650px){.grain-scroll-stage>.grain-callout{width:70%}.grain-callout>img{width:52px;height:52px}.grain-leader{stroke-width:1.6}}
+@media(max-width:650px){.grain-scroll-stage>.grain-callout{width:70%}.grain-callout>img{width:78px;height:78px}.grain-leader{stroke-width:1.6}}
 
 @media(min-width:651px){.grain-scroll-stage>.callout-left{left:6%}.grain-scroll-stage>.callout-right{right:6%}.grain-scroll-stage>.grain-callout{width:26%}}
 
