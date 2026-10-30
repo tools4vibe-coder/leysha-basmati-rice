@@ -561,25 +561,34 @@ qualityButtons.forEach(button => {
 });
 
 let qualityScrollRaf = 0;
+function syncMobileQualityCards() {
+  qualityScrollRaf = 0;
+  if (window.innerWidth > 650) return;
+  const trackRect = qualityFeatures.getBoundingClientRect();
+  const trackCenter = trackRect.left + trackRect.width * 0.5;
+  let closestKey = null;
+  let closestDist = Infinity;
+  qualityFeatures.querySelectorAll('[data-quality-item]').forEach(item => {
+    const rect = item.getBoundingClientRect();
+    const offset = (rect.left + rect.width * 0.5) - trackCenter;
+    const dist = Math.abs(offset);
+    const rot = Math.max(-55, Math.min(55, (offset / Math.max(1, trackRect.width)) * 42));
+    item.style.setProperty('--card-bowl-rot', `${rot.toFixed(1)}deg`);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestKey = item.dataset.qualityItem;
+    }
+  });
+  if (closestKey) showQuality(closestKey);
+}
 qualityFeatures.addEventListener('scroll', () => {
   if (window.innerWidth > 650 || qualityScrollRaf) return;
-  qualityScrollRaf = requestAnimationFrame(() => {
-    qualityScrollRaf = 0;
-    const trackRect = qualityFeatures.getBoundingClientRect();
-    const trackCenter = trackRect.left + trackRect.width * 0.5;
-    let closestKey = null;
-    let closestDist = Infinity;
-    qualityFeatures.querySelectorAll('[data-quality-item]').forEach(item => {
-      const rect = item.getBoundingClientRect();
-      const dist = Math.abs((rect.left + rect.width * 0.5) - trackCenter);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closestKey = item.dataset.qualityItem;
-      }
-    });
-    if (closestKey) showQuality(closestKey);
-  });
+  qualityScrollRaf = requestAnimationFrame(syncMobileQualityCards);
 }, {passive: true});
+window.addEventListener('resize', () => {
+  if (window.innerWidth <= 650) syncMobileQualityCards();
+});
+syncMobileQualityCards();
 qualityFeatures.addEventListener('pointerleave', event => {
   if (event.pointerType === 'mouse' && !qualityHoverSuppressed) showQuality('plain');
 });

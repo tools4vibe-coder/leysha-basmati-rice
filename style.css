@@ -1666,12 +1666,12 @@ footer.valley-footer{
   transform:rotate(var(--seal-turn,0deg))
  }
 
- /* 2. Sensory Quality (#quality): place rice bowl right below heading and turn the 3 items into left-to-right swipeable cards. */
+ /* 2. Sensory Quality (#quality): each white content card carries its own overlapping rice bowl that moves left and right with the box. */
  .quality-experience{
   display:flex;
   flex-direction:column;
   align-items:stretch;
-  gap:16px;
+  gap:14px;
   padding-top:42px
  }
  .quality-copy{
@@ -1688,13 +1688,7 @@ footer.valley-footer{
   margin:2px 0 4px
  }
  .quality-media.plate-showcase{
-  order:3;
-  width:min(70vw,245px);
-  margin:0 auto;
-  padding:0
- }
- .quality-stage.plate-stage{
-  width:100%
+  display:none
  }
  .quality-features{
   order:4;
@@ -1702,32 +1696,52 @@ footer.valley-footer{
   display:grid;
   grid-auto-flow:column;
   grid-auto-columns:85%;
-  gap:14px;
+  gap:16px;
   overflow-x:auto;
   overscroll-behavior-x:contain;
   scroll-snap-type:x mandatory;
   scroll-behavior:smooth;
   scrollbar-width:none;
-  padding:8px 4px 18px;
-  margin:0 -4px
+  padding:118px 8px 22px;
+  margin:0 -8px
  }
  .quality-features::-webkit-scrollbar{
   display:none
  }
  .quality-item{
+  position:relative;
   scroll-snap-align:center;
   background:#ffffff;
   border:1px solid rgba(190,39,38,.18);
-  border-radius:20px;
-  padding:18px 18px 16px;
-  box-shadow:0 10px 24px rgba(48,16,14,.06);
+  border-radius:22px;
+  padding:18px 20px 18px;
+  box-shadow:0 12px 28px rgba(48,16,14,.07);
   display:flex;
-  flex-direction:column
+  flex-direction:column;
+  overflow:visible
  }
  .quality-item.is-active{
   background:#ffffff;
   border-color:var(--ink);
-  box-shadow:0 14px 30px rgba(190,39,38,.14)
+  box-shadow:0 16px 34px rgba(190,39,38,.14)
+ }
+ .quality-card-bowl{
+  display:block;
+  width:196px;
+  height:196px;
+  margin:-122px auto 10px;
+  position:relative;
+  z-index:3;
+  filter:drop-shadow(0 22px 26px rgba(48,22,16,.24)) drop-shadow(0 7px 14px rgba(48,22,16,.14));
+  pointer-events:none
+ }
+ .quality-card-bowl img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  transform:rotate(var(--card-bowl-rot,0deg));
+  transition:transform .14s ease-out;
+  will-change:transform
  }
  .quality-trigger{
   padding:0 0 8px;
@@ -1763,5 +1777,10 @@ footer.valley-footer{
   order:5;
   justify-content:center;
   margin-top:0
+ }
+}
+@media(min-width:651px){
+ .quality-card-bowl{
+  display:none
  }
 }
