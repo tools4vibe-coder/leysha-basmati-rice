@@ -256,13 +256,13 @@ header .nav-item:after{opacity:.4}
 .grain-scene-2{background:#992520;color:#fff1e2}
 .grain-backtype{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;text-align:center;font-family:var(--serif);font-size:clamp(100px,14vw,230px);line-height:.94;letter-spacing:-.04em;opacity:.23;pointer-events:none}
 .grain-scroll-stage{z-index:1;pointer-events:none}
-.grain-scene-label{position:absolute;top:30px;left:7%;color:var(--paper)}
+.grain-scene-label{position:absolute;top:30px;left:50%;transform:translateX(-50%);text-align:center;white-space:nowrap;color:var(--paper)}
 .grain-scroll[data-scene="1"] .grain-scene-label,.grain-scroll[data-scene="1"] .grain-scroll-footer{color:var(--ink)}
 .grain-callout{opacity:1;top:39%;width:25%;transform:none}
 .grain-callout>svg{stroke:currentColor}
 .grain-scene-1 .grain-callout>img{filter:none}
 .grain-scroll[data-scene="1"] .grain-progress{background:#be272633}.grain-scroll[data-scene="1"] .grain-progress i{background:var(--ink)}
-@media(max-width:650px){.grain-scene{height:calc(100svh - 72px)}.grain-backtype{font-size:24vw;top:35%;opacity:.28}.grain-callout{top:auto;bottom:65px;width:70%}.grain-scene-label{top:24px;left:6%}#grain-canvas{top:37%;height:72%}}
+@media(max-width:650px){.grain-scene{height:calc(100svh - 72px)}.grain-backtype{font-size:24vw;top:35%;opacity:.28}.grain-callout{top:auto;bottom:65px;width:70%}.grain-scene-label{top:24px;left:50%;transform:translateX(-50%)}#grain-canvas{top:37%;height:72%}}
 
 /* One word per screen; pointer lines draw in as each annotation enters. */
 .grain-backtype{font-size:clamp(150px,27vw,480px);opacity:.3;white-space:nowrap}
