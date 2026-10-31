@@ -1805,7 +1805,8 @@ footer.valley-footer{
  transform:scale(calc(.25 + var(--dot,0)*.75))
 }
 .grain-scroll-stage>.grain-callout.callout-feature{
- top:27%;
+ top:auto;
+ bottom:15.8%;
  width:min(21vw,265px)
 }
 @media(min-width:651px){
