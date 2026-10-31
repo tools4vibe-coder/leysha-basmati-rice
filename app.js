@@ -702,18 +702,16 @@ function updateGrainScroll() {
       featureLeader.style.setProperty('--dot', fDot);
       featureLeader.style.opacity = fade;
       const fRect = featureCallout.getBoundingClientRect();
+      const headingEl = featureCallout.querySelector('.feature-heading');
+      const headingRect = headingEl ? headingEl.getBoundingClientRect() : fRect;
       const fRight = featureCallout.classList.contains('callout-right');
       const fStartX = stageRect.width * 0.5;
-      const fStartY = stageRect.height * (mobile ? .38 : .45);
       const fEndX = mobile
-        ? (fRight ? fRect.right - 45 : fRect.left + 45)
+        ? (fRight ? fRect.left - 10 : fRect.right + 10)
         : (fRight ? fRect.left - 18 : fRect.right + 18);
-      const fEndY = mobile
-        ? fRect.top - stageRect.top - 14
-        : fRect.top - stageRect.top + 165;
-      const fBendX = fStartX + (fEndX - fStartX) * .46;
+      const fEndY = (headingRect.top + headingRect.height * 0.5) - stageRect.top;
       featureLeader.setAttribute('viewBox', `0 0 ${stageRect.width} ${stageRect.height}`);
-      featureLeader.querySelector('path').setAttribute('d', `M${fStartX} ${fStartY} L${fBendX} ${fEndY} H${fEndX}`);
+      featureLeader.querySelector('path').setAttribute('d', `M${fStartX} ${fEndY} H${fEndX}`);
       const dotEl = featureLeader.querySelector('circle');
       dotEl.setAttribute('cx', fEndX);
       dotEl.setAttribute('cy', fEndY);
