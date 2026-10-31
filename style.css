@@ -420,13 +420,22 @@ header .nav-item:after{opacity:.4}
  padding-bottom:65px
 }
 .grain-scroll{
+ --grain-exit-overlap:clamp(190px,26svh,280px);
  background:transparent;
  margin-top:0;
- margin-bottom:0
+ margin-bottom:calc(-1 * var(--grain-exit-overlap));
+ position:relative;
+ z-index:2;
+ pointer-events:none
 }
 .grain-scenes{
  margin-top:clamp(190px,26svh,280px);
- margin-bottom:clamp(190px,26svh,280px)
+ margin-bottom:var(--grain-exit-overlap);
+ pointer-events:auto
+}
+.stamp-range{
+ border-top:0;
+ padding-top:110px
 }
 .quality-experience{
  padding-top:60px
@@ -445,12 +454,16 @@ header .nav-item:after{opacity:.4}
   padding-bottom:45px
  }
  .grain-scroll{
+  --grain-exit-overlap:clamp(140px,22svh,190px);
   margin-top:0;
-  margin-bottom:0
+  margin-bottom:calc(-1 * var(--grain-exit-overlap))
  }
  .grain-scenes{
   margin-top:clamp(140px,22svh,190px);
-  margin-bottom:clamp(140px,22svh,190px)
+  margin-bottom:var(--grain-exit-overlap)
+ }
+ .stamp-range{
+  padding-top:85px
  }
  .quality-experience{
   padding-top:45px
