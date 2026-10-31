@@ -1786,6 +1786,9 @@ footer.valley-footer{
 }
 
 /* Opposite-side Basmati feature pointer: straight horizontal line emerges from behind the middle grain, ends at a dot beside the bold heading, with square media card above and subcopy below. */
+.grain-scene{
+ height:calc(118svh - 90px)
+}
 .grain-leader.grain-leader-feature{
  z-index:0;
  stroke-width:1.4
@@ -1802,17 +1805,17 @@ footer.valley-footer{
  transform:scale(calc(.25 + var(--dot,0)*.75))
 }
 .grain-scroll-stage>.grain-callout.callout-feature{
- top:28%;
- width:min(22vw,280px)
+ top:27%;
+ width:min(21vw,265px)
 }
 @media(min-width:651px){
  .grain-scroll-stage>.callout-right.callout-feature{
-  left:calc(50% + 18.5vw);
+  left:calc(50% + max(23.5vw,250px));
   right:auto;
   text-align:left
  }
  .grain-scroll-stage>.callout-left.callout-feature{
-  right:calc(50% + 18.5vw);
+  right:calc(50% + max(23.5vw,250px));
   left:auto;
   text-align:right
  }

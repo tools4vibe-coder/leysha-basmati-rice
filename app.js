@@ -668,10 +668,10 @@ function updateGrainScroll() {
     scene.style.setProperty('--word-drift',`${reducedMotion.matches?0:phase*screen*.3}px`);
     callout.style.setProperty('--callout-drift',`${drift}px`);
     callout.style.setProperty('--reveal',reveal);
-    const fade=1-smooth((phase-.5)/.25);
-    const ring=smooth((phase+.55)/.12)*fade;
-    const line=smooth((phase+.43)/.16)*fade;
-    const text=smooth((phase+.27)/.16)*fade;
+    const fade=1-smooth((phase-.56)/.24);
+    const ring=smooth((phase+.56)/.11)*fade;
+    const line=smooth((phase+.45)/.14)*fade;
+    const text=smooth((phase+.32)/.14)*fade;
     callout.style.setProperty('--text-reveal',text);
     leader.style.setProperty('--ring',ring);
     leader.style.setProperty('--line',line);
@@ -692,11 +692,12 @@ function updateGrainScroll() {
     callout.setAttribute('aria-hidden',text<.1);
 
     if (featureCallout && featureLeader) {
-      const fLine = smooth((phase + .46) / .17) * fade;
-      const fDot = smooth((phase + .33) / .10) * fade;
-      const fText = smooth((phase + .24) / .16) * fade;
+      const fLine = smooth((phase + .15) / .14) * fade;
+      const fDot = smooth((phase + .02) / .08) * fade;
+      const fText = smooth((phase - .01) / .14) * fade;
+      const fReveal = smooth((phase + .02) / .24) * (1 - smooth((phase - .56) / .24));
       featureCallout.style.setProperty('--callout-drift', `${drift}px`);
-      featureCallout.style.setProperty('--reveal', reveal);
+      featureCallout.style.setProperty('--reveal', fReveal);
       featureCallout.style.setProperty('--text-reveal', fText);
       featureLeader.style.setProperty('--line', fLine);
       featureLeader.style.setProperty('--dot', fDot);
