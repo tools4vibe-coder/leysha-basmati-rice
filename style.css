@@ -1811,12 +1811,12 @@ footer.valley-footer{
 }
 @media(min-width:651px){
  .grain-scroll-stage>.callout-right.callout-feature{
-  left:calc(50% + max(23.5vw,250px));
+  left:calc(50% + max(18vw,195px));
   right:auto;
   text-align:left
  }
  .grain-scroll-stage>.callout-left.callout-feature{
-  right:calc(50% + max(23.5vw,250px));
+  right:calc(50% + max(18vw,195px));
   left:auto;
   text-align:right
  }
