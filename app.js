@@ -609,16 +609,28 @@ let grainTarget = 0, grainDrawn = -1, grainTick = 0;
 // Keep annotations above the transparent grain while their source scenes scroll beneath it.
 const grainStage = document.querySelector('.grain-scroll-stage');
 const grainScenes = [...document.querySelectorAll('.grain-scene')].map(scene => {
-  const callout=scene.querySelector('.grain-callout');
+  const callout = scene.querySelector('.grain-callout:not(.callout-feature)');
+  const featureCallout = scene.querySelector('.grain-callout.callout-feature');
   grainStage.append(callout);
-  callout.querySelector('svg').remove();
-  const leader=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  callout.querySelector('svg')?.remove();
+  const leader = document.createElementNS('http://www.w3.org/2000/svg','svg');
   leader.classList.add('grain-leader');
-  leader.dataset.stage=callout.dataset.stage;
+  leader.dataset.stage = callout.dataset.stage;
   leader.setAttribute('aria-hidden','true');
-  leader.innerHTML='<path pathLength="1"/><circle r="11" pathLength="1"/>';
+  leader.innerHTML = '<path pathLength="1"/><circle r="11" pathLength="1"/>';
   grainStage.append(leader);
-  return {scene,callout,leader};
+
+  let featureLeader = null;
+  if (featureCallout) {
+    grainStage.append(featureCallout);
+    featureLeader = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    featureLeader.classList.add('grain-leader','grain-leader-feature');
+    featureLeader.dataset.stage = featureCallout.dataset.stage;
+    featureLeader.setAttribute('aria-hidden','true');
+    featureLeader.innerHTML = '<path pathLength="1"/><circle class="feature-dot" r="5"/>';
+    grainStage.insertBefore(featureLeader, grainCanvas);
+  }
+  return {scene, callout, leader, featureCallout, featureLeader};
 });
 function drawGrain() {
   grainTick = 0;
@@ -645,7 +657,7 @@ function updateGrainScroll() {
     ? 'lead'
     : String(Math.min(2,Math.max(0,Math.floor((header-firstSceneTop+(innerHeight-header)/2)/(innerHeight-header)))));
   grainSection.dataset.scene=sceneIndex;
-  grainScenes.forEach(({scene,callout,leader})=>{
+  grainScenes.forEach(({scene,callout,leader,featureCallout,featureLeader})=>{
     const rect=scene.getBoundingClientRect();
     const screen=innerHeight-header;
     const phase=(header-rect.top)/screen;
@@ -678,6 +690,35 @@ function updateGrainScroll() {
     leader.querySelector('circle').setAttribute('cx',x);
     leader.querySelector('circle').setAttribute('cy',y);
     callout.setAttribute('aria-hidden',text<.1);
+
+    if (featureCallout && featureLeader) {
+      const fLine = smooth((phase + .46) / .17) * fade;
+      const fDot = smooth((phase + .33) / .10) * fade;
+      const fText = smooth((phase + .24) / .16) * fade;
+      featureCallout.style.setProperty('--callout-drift', `${drift}px`);
+      featureCallout.style.setProperty('--reveal', reveal);
+      featureCallout.style.setProperty('--text-reveal', fText);
+      featureLeader.style.setProperty('--line', fLine);
+      featureLeader.style.setProperty('--dot', fDot);
+      featureLeader.style.opacity = fade;
+      const fRect = featureCallout.getBoundingClientRect();
+      const fRight = featureCallout.classList.contains('callout-right');
+      const fStartX = stageRect.width * 0.5;
+      const fStartY = stageRect.height * (mobile ? .38 : .45);
+      const fEndX = mobile
+        ? (fRight ? fRect.right - 45 : fRect.left + 45)
+        : (fRight ? fRect.left - 18 : fRect.right + 18);
+      const fEndY = mobile
+        ? fRect.top - stageRect.top - 14
+        : fRect.top - stageRect.top + 165;
+      const fBendX = fStartX + (fEndX - fStartX) * .46;
+      featureLeader.setAttribute('viewBox', `0 0 ${stageRect.width} ${stageRect.height}`);
+      featureLeader.querySelector('path').setAttribute('d', `M${fStartX} ${fStartY} L${fBendX} ${fEndY} H${fEndX}`);
+      const dotEl = featureLeader.querySelector('circle');
+      dotEl.setAttribute('cx', fEndX);
+      dotEl.setAttribute('cy', fEndY);
+      featureCallout.setAttribute('aria-hidden', fText < .1);
+    }
   });
   if (!grainTick) grainTick=requestAnimationFrame(drawGrain);
 }

@@ -1784,3 +1784,102 @@ footer.valley-footer{
   display:none
  }
 }
+
+/* Opposite-side Basmati feature pointer: line emerges from behind the middle grain, ends at a dot, and reveals media + heading + subcopy. */
+.grain-leader.grain-leader-feature{
+ z-index:0
+}
+.grain-leader.grain-leader-feature circle.feature-dot{
+ fill:currentColor;
+ stroke:currentColor;
+ stroke-width:1.5;
+ stroke-dasharray:none;
+ stroke-dashoffset:0;
+ opacity:var(--dot,0);
+ transform-box:fill-box;
+ transform-origin:center;
+ transform:scale(calc(.25 + var(--dot,0)*.75))
+}
+.grain-scroll-stage>.grain-callout.callout-feature{
+ top:31%
+}
+.feature-media{
+ position:relative;
+ width:210px;
+ height:128px;
+ border-radius:14px;
+ overflow:hidden;
+ border:1.5px solid currentColor;
+ box-shadow:0 14px 28px rgba(24,8,6,.24);
+ margin-bottom:14px;
+ background:#1c110f
+}
+.callout-left.callout-feature>.feature-media{
+ margin-left:auto
+}
+.feature-media img,
+.feature-media video{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ object-position:center 22%;
+ display:block
+}
+.feature-badge{
+ position:absolute;
+ left:8px;
+ bottom:8px;
+ padding:4px 9px;
+ border-radius:999px;
+ background:rgba(20,10,8,.72);
+ -webkit-backdrop-filter:blur(6px);
+ backdrop-filter:blur(6px);
+ color:#fff1e2;
+ font-size:8.5px;
+ font-weight:700;
+ letter-spacing:1.2px;
+ text-transform:uppercase
+}
+@media(max-width:650px){
+ .grain-scroll-stage>.grain-callout,
+ .grain-scroll-stage>.grain-callout.callout-feature{
+  top:auto;
+  bottom:34px;
+  width:43%
+ }
+ .grain-scroll-stage>.callout-left>img{
+  margin-right:auto;
+  margin-left:0
+ }
+ .grain-scroll-stage>.callout-right>img{
+  margin-left:auto
+ }
+ .callout-left.callout-feature>.feature-media{
+  margin-left:0;
+  margin-right:auto
+ }
+ .callout-right.callout-feature>.feature-media{
+  margin-left:auto
+ }
+ .feature-media{
+  width:118px;
+  height:74px;
+  border-radius:10px;
+  margin-bottom:8px
+ }
+ .feature-badge{
+  font-size:6.5px;
+  padding:3px 6px;
+  left:5px;
+  bottom:5px
+ }
+ .grain-callout h3{
+  font-size:21px;
+  line-height:1.15;
+  margin-bottom:6px
+ }
+ .grain-callout p{
+  font-size:11px;
+  line-height:1.45
+ }
+}
