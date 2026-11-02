@@ -83,15 +83,15 @@ header .nav-item{border:0;padding:10px 0;background:none;color:var(--muted);font
 .ticket-arch img{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);width:74%;height:80%;object-fit:contain;object-position:center bottom;transition:transform .5s ease}
 .stamp-ticket:hover .ticket-arch img{transform:translateX(-50%) translateY(-5px)}
 .arch-caption{position:absolute;top:16%;left:16%;right:16%;font-size:8.5px;font-weight:600;letter-spacing:1.3px;color:var(--paper);z-index:1}
-.ticket-information{display:flex;flex-direction:column;align-items:center;padding:21px 3px 0;flex:1}
-.ticket-category{font-size:10px;font-weight:600;letter-spacing:2px;display:block}.ticket-name{font:400 clamp(27px,2.6vw,42px)/1.14 var(--serif);display:flex;align-items:center;justify-content:center;min-height:85px;margin-top:7px;max-width:100%}
-.ticket-ornament{display:block;width:100%;height:16px;margin:6px 0 12px}
-.ticket-description{display:block;font-size:14px;line-height:1.6;max-width:270px;min-height:42px;margin:0 auto 20px;color:var(--muted)}
+.ticket-information{display:flex;flex-direction:column;align-items:center;padding:21px 6px 6px;flex:1}
+.ticket-category{font-size:10px;font-weight:600;letter-spacing:2px;display:block}.ticket-name{font:400 clamp(27px,2.6vw,42px)/1.14 var(--serif);display:flex;align-items:center;justify-content:center;min-height:54px;margin-top:4px;max-width:100%}
+.ticket-ornament{display:block;width:100%;height:16px;margin:8px 0 14px}
+.ticket-description{display:block;font-size:14.5px;line-height:1.6;max-width:270px;min-height:44px;margin:0 auto 4px;color:var(--muted)}
 .ticket-facts{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:0;border-block:1px solid var(--line);padding:14px 0;margin-top:auto}.ticket-facts>span{font-size:9px;font-weight:600;letter-spacing:1.1px;line-height:1.4;display:block}.ticket-facts>span+span{border-left:1px solid var(--line)}.ticket-facts strong{font:600 14px/1.4 'Leysha Helvetica',Helvetica,sans-serif;letter-spacing:0;display:block;margin:6px 5px 0}
 .ticket-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding-top:17px;font-size:9.5px;font-weight:600;letter-spacing:.8px}.ticket-bottom>span{font-size:12px;font-weight:700;letter-spacing:0;white-space:nowrap}
 .range-end{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-top:35px;font-size:13px}.range-end>span{font-size:10.5px;font-weight:600;letter-spacing:1.5px}.range-end a{border-bottom:1px solid #fff8;padding-bottom:5px;font-size:13.5px;font-weight:600}
-@media(max-width:1100px){.stamp-collection{gap:18px}.stamp-ticket{padding:24px 18px}.ticket-name{font-size:30px;min-height:75px}.ticket-bottom{flex-direction:column;gap:10px}.arch-caption{font-size:6px;letter-spacing:.7px}.ticket-description{font-size:11px;min-height:54px}}
-@media(max-width:700px){.stamp-collection{grid-template-columns:1fr;gap:30px;max-width:420px;margin-inline:auto}.stamp-ticket{padding:28px 25px}.stamp-range .range-head h2{font-size:40px}.stamp-range .range-head>p{font-size:13px}.ticket-name{font-size:36px;min-height:72px}.ticket-edition{font-size:8px}.arch-caption{font-size:7px;letter-spacing:1.1px}.ticket-description{font-size:12px;min-height:40px}.ticket-bottom{flex-direction:row;font-size:7px}.ticket-facts strong{font-size:12px}.range-end{align-items:flex-start;flex-direction:column;gap:20px}.stamp-range{padding-block:65px}}
+@media(max-width:1100px){.stamp-collection{gap:18px}.stamp-ticket{padding:24px 18px}.ticket-name{font-size:30px;min-height:48px}.ticket-bottom{flex-direction:column;gap:10px}.arch-caption{font-size:6px;letter-spacing:.7px}.ticket-description{font-size:12px;min-height:48px}}
+@media(max-width:700px){.stamp-collection{grid-template-columns:1fr;gap:30px;max-width:420px;margin-inline:auto}.stamp-ticket{padding:28px 25px}.stamp-range .range-head h2{font-size:40px}.stamp-range .range-head>p{font-size:13px}.ticket-name{font-size:34px;min-height:48px}.ticket-edition{font-size:8px}.arch-caption{font-size:7px;letter-spacing:1.1px}.ticket-description{font-size:13px;min-height:40px}.ticket-bottom{flex-direction:row;font-size:7px}.ticket-facts strong{font-size:12px}.range-end{align-items:flex-start;flex-direction:column;gap:20px}.stamp-range{padding-block:65px}}
 @media(prefers-reduced-motion:reduce){.stamp-ticket:hover .ticket-arch img{transform:translateX(-50%)}}
 
 /* Preserve the supplied seal's circular shape, transparency and gold colour. */
@@ -1390,35 +1390,48 @@ footer.valley-footer{
  gap:28px
 }
 .range-head-controls>p{
- max-width:290px;
+ max-width:370px;
  margin:0;
  color:var(--paper);
  font-size:16px;
  line-height:1.6
 }
-.range-nav{
- display:inline-flex;
- align-items:center;
- gap:10px
+.range-carousel-stage{
+ position:relative
 }
 .range-arrow{
- width:48px;
- height:48px;
+ width:50px;
+ height:50px;
  border-radius:50%;
- border:1px solid rgba(255,241,226,.38);
- background:rgba(255,241,226,.08);
+ border:1px solid rgba(255,241,226,.44);
+ background:rgba(190,39,38,.92);
+ box-shadow:0 10px 24px rgba(24,5,4,.28);
  color:var(--paper);
- font-size:18px;
+ font-size:19px;
  line-height:1;
  display:grid;
  place-items:center;
- transition:background-color .22s ease,color .22s ease,transform .22s ease,border-color .22s ease
+ position:absolute;
+ top:50%;
+ transform:translateY(-50%);
+ z-index:6;
+ transition:background-color .22s ease,color .22s ease,transform .22s ease,border-color .22s ease,box-shadow .22s ease
+}
+.range-arrow-prev{
+ left:clamp(-64px,-4.3vw,-14px)
+}
+.range-arrow-next{
+ right:clamp(-64px,-4.3vw,-14px)
 }
 .range-arrow:hover{
  background:var(--paper);
  color:var(--ink);
  border-color:var(--paper);
- transform:scale(1.06)
+ transform:translateY(-50%) scale(1.07)
+}
+.range-arrow:focus-visible{
+ outline:2px solid var(--paper);
+ outline-offset:4px
 }
 .stamp-collection{
  display:grid;
@@ -1484,6 +1497,17 @@ footer.valley-footer{
  }
  .range-head-controls>p{
   max-width:none
+ }
+ .range-arrow{
+  width:42px;
+  height:42px;
+  font-size:16px
+ }
+ .range-arrow-prev{
+  left:-8px
+ }
+ .range-arrow-next{
+  right:-8px
  }
  .stamp-collection{
   max-width:none;
