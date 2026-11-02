@@ -787,7 +787,7 @@ function loadGrainFrame(i) {
   const img=new Image();
   grainFrames[i]=img;
   img.onload=()=>{if(i===grainTarget || grainDrawn<0) {grainTarget=grainDrawn<0?i:grainTarget;drawGrain();}};
-  img.src=`assets/grain-scroll-clean/${String(i).padStart(3,'0')}.webp?v=1080p-smooth`;
+  img.src=`assets/grain-scroll-clean/${String(i).padStart(3,'0')}.webp?v=carved-grain-v2`;
 }
 loadGrainFrame(0);
 // Load the sequence as the reader approaches the section, rather than blocking the opening page.
