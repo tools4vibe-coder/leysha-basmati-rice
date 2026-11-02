@@ -2711,3 +2711,62 @@ header .nav-group.is-open>.nav-item:before{
   overflow-y:auto
  }
 }
+
+/* Keep curvy display font (Avigea) only on primary section titles; use clean Leysha Helvetica on all card, item, and sub-headings. */
+h3,
+.card-title,
+.quality-title,
+.ticket-name,
+.social-card h3,
+.grain-callout h3,
+.cook .steps b,
+.cook .measures dd,
+.cook .stepper output,
+.nav-dropdown-head h3,
+.nav-MenuCard strong,
+.landscape>span,
+.image-caption,
+summary,
+.story-content h3,
+.process-step h3,
+.quality-note h3{
+ font-family:'Leysha Helvetica',Helvetica,Arial,sans-serif;
+ font-weight:700;
+ letter-spacing:-.02em
+}
+.card-title{
+ font-size:clamp(22px,2vw,30px);
+ line-height:1.18
+}
+.quality-title{
+ font-size:clamp(20px,1.75vw,24px);
+ line-height:1.25
+}
+.grain-callout h3{
+ font-size:clamp(26px,2.5vw,38px);
+ line-height:1.16
+}
+.ticket-name{
+ font-size:clamp(22px,2vw,30px);
+ line-height:1.18
+}
+.nav-stamp-card .ticket-name{
+ font-size:clamp(16px,1.2vw,19px);
+ line-height:1.2
+}
+.social-card h3{
+ font-size:clamp(18px,1.5vw,22px);
+ line-height:1.24
+}
+.social-card.is-horizontal h3{
+ font-size:clamp(20px,1.7vw,24px);
+ line-height:1.22
+}
+.cook .steps b{
+ font-size:19px;
+ line-height:1.28
+}
+.nav-MenuCard strong{
+ font-size:18px;
+ line-height:1.25
+}
