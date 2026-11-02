@@ -175,12 +175,70 @@
 
 const menu = document.querySelector('.menu');
 const nav = document.querySelector('#nav');
+const navGroups = [...document.querySelectorAll('.nav-group')];
+
+function closeAllDropdowns() {
+  navGroups.forEach(group => {
+    group.classList.remove('is-open');
+    const btn = group.querySelector('.nav-trigger');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  });
+}
+
+function setDropdownOpen(targetGroup, open) {
+  navGroups.forEach(group => {
+    const isTarget = group === targetGroup && open;
+    group.classList.toggle('is-open', isTarget);
+    const btn = group.querySelector('.nav-trigger');
+    if (btn) btn.setAttribute('aria-expanded', isTarget ? 'true' : 'false');
+  });
+}
+
+navGroups.forEach(group => {
+  const trigger = group.querySelector('.nav-trigger');
+  let closeTimer = 0;
+
+  trigger?.addEventListener('click', event => {
+    event.stopPropagation();
+    const isOpen = group.classList.contains('is-open');
+    setDropdownOpen(group, !isOpen);
+  });
+
+  group.addEventListener('pointerenter', event => {
+    if (event.pointerType !== 'mouse' || window.innerWidth <= 1100) return;
+    clearTimeout(closeTimer);
+    setDropdownOpen(group, true);
+  });
+
+  group.addEventListener('pointerleave', event => {
+    if (event.pointerType !== 'mouse' || window.innerWidth <= 1100) return;
+    clearTimeout(closeTimer);
+    closeTimer = window.setTimeout(() => {
+      if (group.classList.contains('is-open')) setDropdownOpen(group, false);
+    }, 150);
+  });
+});
+
+document.addEventListener('click', event => {
+  if (!event.target.closest('.nav-group')) {
+    closeAllDropdowns();
+  }
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    closeAllDropdowns();
+  }
+});
+
 menu.addEventListener('click', () => {
   const open = menu.getAttribute('aria-expanded') !== 'true';
   menu.setAttribute('aria-expanded', String(open));
   nav.classList.toggle('open', open);
+  if (!open) closeAllDropdowns();
 });
-nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+nav.querySelectorAll('a, .nav-stamp-card').forEach(link => link.addEventListener('click', () => {
+  closeAllDropdowns();
   menu.setAttribute('aria-expanded', 'false');
   nav.classList.remove('open');
 }));
