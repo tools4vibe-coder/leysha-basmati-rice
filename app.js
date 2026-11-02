@@ -979,8 +979,8 @@ syncLatestSsielBlogPost();
     stylesEl.querySelectorAll('button').forEach(x => {
       x.setAttribute('aria-pressed', String(x === btn));
     });
-    document.querySelectorAll('.cook-bg').forEach(bg => {
-      bg.classList.toggle('on', bg.getAttribute('data-k') === currentStyle);
+    document.querySelectorAll('.cook-dish-item').forEach(item => {
+      item.classList.toggle('is-active', item.getAttribute('data-cook-visual') === currentStyle);
     });
     updateMeasures();
   });
