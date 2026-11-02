@@ -997,3 +997,47 @@ syncLatestSsielBlogPost();
 
   updateMeasures();
 })();
+
+// Utmost bottom footer expandable Popular Search & About Leysha Rice sections with hidden="until-found" support.
+(() => {
+  const facc = document.querySelector('.footer-utmost-bottom .facc');
+  if (!facc) return;
+  const supportsBeforeMatch = 'onbeforematch' in HTMLElement.prototype;
+
+  facc.querySelectorAll('.fq-btn').forEach(btn => {
+    const item = btn.closest('.fq');
+    const panel = item ? item.querySelector('.fq-panel') : null;
+    if (!item || !panel) return;
+
+    btn.addEventListener('click', () => {
+      const nextOpen = !item.classList.contains('open');
+      item.classList.toggle('open', nextOpen);
+      btn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+      if (nextOpen) {
+        panel.removeAttribute('hidden');
+      } else if (supportsBeforeMatch) {
+        panel.setAttribute('hidden', 'until-found');
+      }
+    });
+  });
+
+  facc.addEventListener('beforematch', event => {
+    const panel = event.target.closest('.fq-panel');
+    if (!panel) return;
+    const item = panel.closest('.fq');
+    const btn = item ? item.querySelector('.fq-btn') : null;
+    panel.removeAttribute('hidden');
+    if (item) item.classList.add('open');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  });
+
+  if (!supportsBeforeMatch) {
+    facc.querySelectorAll('[hidden="until-found"]').forEach(el => {
+      el.removeAttribute('hidden');
+      const item = el.closest('.fq');
+      const btn = item ? item.querySelector('.fq-btn') : null;
+      if (item) item.classList.add('open');
+      if (btn) btn.setAttribute('aria-expanded', 'true');
+    });
+  }
+})();

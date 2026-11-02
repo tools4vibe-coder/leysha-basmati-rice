@@ -2337,3 +2337,158 @@ footer.valley-footer{
   margin-left:48px
  }
 }
+
+/* Utmost bottom crimson footer band with copyright, outline social icons, Popular Search tags, and About Leysha Rice accordion. */
+.footer-utmost-bottom{
+ background:var(--ink);
+ color:var(--paper);
+ padding:clamp(32px,3.2vw,46px) 5% clamp(36px,3.6vw,52px);
+ position:relative;
+ z-index:4
+}
+.footer-utmost-wrap{
+ max-width:1360px;
+ margin:0 auto
+}
+.footer-utmost-bottom .foot-bar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px 40px;
+ flex-wrap:wrap;
+ font-size:clamp(13px,1.05vw,15.5px);
+ color:#ffffff
+}
+.footer-utmost-bottom .social{
+ display:flex;
+ align-items:center;
+ gap:24px
+}
+.footer-utmost-bottom .social a{
+ display:flex;
+ color:var(--paper);
+ transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .3s
+}
+.footer-utmost-bottom .social a:hover,
+.footer-utmost-bottom .social a:focus-visible{
+ transform:translateY(-3px);
+ opacity:.82;
+ outline-color:#ffffff
+}
+.footer-utmost-bottom .social svg{
+ display:block;
+ fill:currentColor
+}
+.footer-utmost-bottom .social .s-fb{
+ width:17px;
+ height:30px
+}
+.footer-utmost-bottom .social .s-ig{
+ width:25px;
+ height:25px
+}
+.footer-utmost-bottom .social .s-yt{
+ width:32px;
+ height:25px
+}
+.footer-utmost-bottom .social .s-x{
+ width:25px;
+ height:24px
+}
+.footer-utmost-bottom .facc{
+ display:flex;
+ flex-direction:column;
+ gap:10px;
+ margin-top:26px
+}
+.footer-utmost-bottom .fq{
+ border-bottom:1px solid rgba(255,255,255,.22)
+}
+.footer-utmost-bottom .fq-btn{
+ display:flex;
+ width:100%;
+ align-items:center;
+ justify-content:space-between;
+ gap:16px;
+ min-height:54px;
+ padding:16px 12px;
+ border:0;
+ background:none;
+ color:#ffffff;
+ font:400 14px/1.2 'Leysha Helvetica',Helvetica,Arial,sans-serif;
+ text-align:left;
+ cursor:pointer
+}
+.footer-utmost-bottom .fq-btn:focus-visible{
+ outline:2px solid var(--paper);
+ outline-offset:2px
+}
+.footer-utmost-bottom .fq-chev{
+ flex:none;
+ width:10px;
+ height:5px;
+ margin-right:7px;
+ fill:currentColor;
+ transition:transform .45s cubic-bezier(.2,.7,.2,1)
+}
+.footer-utmost-bottom .fq-btn[aria-expanded="true"] .fq-chev{
+ transform:rotate(180deg)
+}
+.footer-utmost-bottom .fq-panel{
+ display:grid;
+ grid-template-rows:0fr;
+ transition:grid-template-rows .45s cubic-bezier(.2,.7,.2,1)
+}
+.footer-utmost-bottom .fq-panel>div{
+ overflow:hidden;
+ min-height:0
+}
+.footer-utmost-bottom .fq.open .fq-panel{
+ grid-template-rows:1fr
+}
+.footer-utmost-bottom .fq-panel p{
+ margin:0;
+ padding:0 12px 22px;
+ max-width:780px;
+ font:400 13.5px/1.72 'Leysha Helvetica',Helvetica,Arial,sans-serif;
+ color:var(--paper)
+}
+.footer-utmost-bottom .fq-tags{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ margin:0;
+ padding:0 12px 22px;
+ list-style:none
+}
+.footer-utmost-bottom .fq-tags a{
+ display:block;
+ padding:6px 13px;
+ border:1px solid rgba(255,255,255,.32);
+ border-radius:999px;
+ font:400 12.5px/1.2 'Leysha Helvetica',Helvetica,Arial,sans-serif;
+ color:var(--paper);
+ transition:background-color .25s ease,color .25s ease,border-color .25s ease
+}
+.footer-utmost-bottom .fq-tags a:hover,
+.footer-utmost-bottom .fq-tags a:focus-visible{
+ background:#ffffff;
+ color:var(--ink);
+ border-color:#ffffff;
+ outline:none
+}
+@media(max-width:700px){
+ .footer-utmost-bottom{
+  padding:28px 6% 36px
+ }
+ .footer-utmost-bottom .foot-bar{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:16px
+ }
+ .footer-utmost-bottom .fq-btn,
+ .footer-utmost-bottom .fq-tags,
+ .footer-utmost-bottom .fq-panel p{
+  padding-inline:4px
+ }
+}
