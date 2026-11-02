@@ -634,7 +634,7 @@ footer.valley-footer{
  align-self:end;
  position:relative;
  z-index:3;
- width:min(92%,740px);
+ width:min(92%,980px);
  margin:0 auto;
  padding:clamp(42px,4vw,68px) 20px 23.6vw;
  display:flex;
@@ -660,16 +660,16 @@ footer.valley-footer{
 }
 .footer-headline{
  font-family:var(--serif);
- font-size:clamp(40px,4.2vw,66px);
+ font-size:clamp(24px,3.8vw,60px);
  line-height:1.06;
  letter-spacing:-1.2px;
  margin:0;
  color:var(--ink);
- text-wrap:balance
+ white-space:nowrap
 }
 @supports (font-size:1cqi){
  .footer-headline{
-  font-size:clamp(40px,4.2cqi,66px)
+  font-size:clamp(24px,3.8cqi,60px)
  }
 }
 .footer-sub{
@@ -810,7 +810,7 @@ footer.valley-footer{
 }
 @media(max-width:1100px){
  .footer-center{
-  width:min(92%,560px);
+  width:min(92%,880px);
   gap:12px;
   padding-top:32px;
   padding-bottom:23.8vw
