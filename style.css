@@ -2469,16 +2469,16 @@ header .nav-item{
  display:inline-flex;
  align-items:center;
  gap:7px;
- color:var(--ink);
+ color:var(--muted);
  transition:color .2s ease,transform .2s ease
 }
 header .nav-item:hover,
 header .nav-group.is-open>.nav-item{
- color:var(--ssiel)
+ color:#ffffff
 }
 header .nav-item:hover:before,
 header .nav-group.is-open>.nav-item:before{
- background:rgba(190,39,38,.13)
+ background:#333333
 }
 .dealer-button:hover:before{
  background:var(--ssiel)
