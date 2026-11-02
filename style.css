@@ -2359,42 +2359,6 @@ footer.valley-footer{
  font-size:clamp(13px,1.05vw,15.5px);
  color:#ffffff
 }
-.footer-utmost-bottom .social{
- display:flex;
- align-items:center;
- gap:24px
-}
-.footer-utmost-bottom .social a{
- display:flex;
- color:var(--paper);
- transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .3s
-}
-.footer-utmost-bottom .social a:hover,
-.footer-utmost-bottom .social a:focus-visible{
- transform:translateY(-3px);
- opacity:.82;
- outline-color:#ffffff
-}
-.footer-utmost-bottom .social svg{
- display:block;
- fill:currentColor
-}
-.footer-utmost-bottom .social .s-fb{
- width:17px;
- height:30px
-}
-.footer-utmost-bottom .social .s-ig{
- width:25px;
- height:25px
-}
-.footer-utmost-bottom .social .s-yt{
- width:32px;
- height:25px
-}
-.footer-utmost-bottom .social .s-x{
- width:25px;
- height:24px
-}
 .footer-utmost-bottom .facc{
  display:flex;
  flex-direction:column;
