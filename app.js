@@ -185,12 +185,12 @@ nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
   nav.classList.remove('open');
 }));
 const products = {
-  shahi: {name: 'Shahi Pasand', image: 'shahi-cutout.png', copy: 'Leysha Shahi Pasand Basmati Rice. Sweet and soft, with rich aroma—crafted for every cuisine.', sizes: 'Shown in a 1 kg pack. Contact our team for available pack sizes.'},
-  supermax: {name: 'SuperMaxxx', image: 'supermax-cutout.png', copy: 'Leysha SuperMaxxx Basmati Rice. Long and slender grains with rich aroma, ready for your favourite rice creations.', sizes: 'Shown in a 1 kg pack. Contact our team for available pack sizes.'},
-  virasat: {name: 'Virasat Biryani', image: 'shahi-cutout.png', copy: 'Aged basmati with a gentle vintage aroma and 2× grain elongation, crafted for layered biryanis and the occasions that bring everyone together.', sizes: 'Available in 1 kg, 5 kg and 10 kg packs.'},
-  nainital: {name: 'Nainital Special', image: 'nainital-cutout.png', copy: 'Part of Leysha’s steam basmati collection. Speak with our team to find the right pack for your kitchen or business.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 30 kg packs.'},
-  goldensella: {name: 'Golden Sella', image: 'supermax-cutout.png', copy: 'Parboiled golden basmati engineered to stay firm, separate and aromatic through slow dum cooking and large gatherings.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'},
-  creamsella: {name: 'Cream Sella', image: 'nainital-cutout.png', copy: 'Parboiled creamy ivory basmati with tender texture, delicate aroma and dependable grain separation in every pot.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'}
+  shahi: {name: 'Shahi Pasand', image: 'shahi-cutout.png', copy: 'Soft, sweet-smelling Basmati grains that cook fluffy and make everyday family meals feel special.', sizes: 'Shown in a 1 kg pack. Contact our team for available pack sizes.'},
+  supermax: {name: 'SuperMaxxx', image: 'supermax-cutout.png', copy: 'Extra-long, slender Basmati grains with a rich natural aroma—great for pulao, fried rice, and festive cooking.', sizes: 'Shown in a 1 kg pack. Contact our team for available pack sizes.'},
+  virasat: {name: 'Virasat Biryani', image: 'shahi-cutout.png', copy: 'Naturally aged extra-long Basmati that stretches to twice its length when cooked, made for classic layered biryanis.', sizes: 'Available in 1 kg, 5 kg and 10 kg packs.'},
+  nainital: {name: 'Nainital Special', image: 'nainital-cutout.png', copy: 'Soft, fragrant steam Basmati made for daily home-cooked meals, jeera rice, and light vegetable pulao.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 30 kg packs.'},
+  goldensella: {name: 'Golden Sella', image: 'supermax-cutout.png', copy: 'Parboiled golden Basmati that stays firm, separate, and never breaks—even during slow dum cooking for large gatherings.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'},
+  creamsella: {name: 'Cream Sella', image: 'nainital-cutout.png', copy: 'Creamy white parboiled Basmati with a soft texture and reliable grain separation in every pot.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'}
 };
 const dialog = document.querySelector('#product-dialog');
 document.querySelectorAll('[data-product]').forEach(button => button.addEventListener('click', () => {
@@ -437,10 +437,10 @@ syncFilmPlayback();
 const storyDialog = document.querySelector('#story-dialog');
 const storyBody = document.querySelector('#story-body');
 const stories = {
-  heritage: `<img class="story-banner" src="assets/factory.jpg" alt="SSIEL rice processing facility"><article class="story-content"><h2 id="story-title">The roots of our story.</h2><p>Before a grain reaches the kitchen, it carries the experience of the people who have worked with it. For Leysha, those roots lie in the rice-processing journey of Shiv Shakti Inter Globe Exports.</p><p>The story began with a small rice mill in 1967. In 1985, Shiv Shakti Rice Mill was established. The formation of SSIEL in 2012 brought an ultra-modern rice mill and a vision to take its rice to kitchens around the world.</p><div class="story-milestones"><div><strong>1967</strong><p>A small rice mill begins the journey.</p></div><div><strong>1985</strong><p>Shiv Shakti Rice Mill is established.</p></div><div><strong>2012</strong><p>SSIEL is formed, opening a new chapter.</p></div></div><h3>A legacy brought to the everyday.</h3><p>As part of the SSIEL family, Leysha brings this rice expertise to a collection made for different cuisines and occasions. Steam basmati, golden sella and cream sella each have a place in the kitchen, from a fragrant pulao to a biryani shared with family.</p><p>That is the spirit of Cook Brilliance Today: the pride of serving something made with care, on an ordinary day as much as a special one.</p><p class="story-source">Explore the company behind Leysha at <a href="https://ssiel.com/ssiel-history/" target="_blank" rel="noopener">SSIEL’s history ↗</a>.</p></article>`,
-  film: `<video class="story-video" controls playsinline preload="metadata" poster="assets/hero-film-poster.jpg"><source src="assets/hero-film.mp4" type="video/mp4"></video><div class="story-content film-story-content"><h2 id="story-title">From field to table.</h2><p>A glimpse into the world of Leysha: the grain, the craft and the people behind it.</p></div>`,
-  process: `<img class="story-banner" src="assets/lab.jpg" alt="Rice inspection in the SSIEL quality laboratory"><article class="story-content"><h2 id="story-title">The care in every grain.</h2><p>Rice has its own character. Processing and inspection help bring that character to the kitchen with consistency. Here is how SSIEL describes the journey behind its rice.</p><div class="process-steps"><section class="process-step"><h3>Selection & ageing</h3><p>Paddy is sourced from Haryana, Punjab and Western Uttar Pradesh. After harvest, rice is stored for ageing before further processing.</p></section><section class="process-step"><h3>Cleaning & preparation</h3><p>Pre-cleaners, de-stoners and sizers separate unwanted material and prepare the grain for the stages ahead.</p></section><section class="process-step"><h3>Polishing & colour sorting</h3><p>Water and air are used in polishing. Colour sorting then separates discoloured and damaged grains.</p></section><section class="process-step"><h3>Grading & packing</h3><p>The rice is graded by length for uniformity before being packed for kitchens and businesses.</p></section></div><div class="quality-note"><h3>Checked before and after cooking.</h3><p>SSIEL’s quality lab evaluates grains at both stages. Checks include grain length and elongation, moisture and whiteness, alongside aroma, flavour, texture and appearance.</p></div><h3>What the checks look for.</h3><p>Length checks examine the grain before and after cooking. Moisture and whiteness checks help assess its condition and degree of milling. Sensory evaluation considers how the cooked rice smells, tastes, feels and looks.</p><p class="story-source">Read more about <a href="https://ssiel.com/" target="_blank" rel="noopener">SSIEL’s processing ↗</a> and its <a href="https://ssiel.com/ssiel-qc-lab/" target="_blank" rel="noopener">quality-control laboratory ↗</a>.</p></article>`,
-  blog: `<img class="story-banner" src="assets/virasat.jpg" alt="Aged Basmati harvest in the foothills of Haryana"><article class="story-content"><h2 id="story-title">Why ageing Basmati in the foothills of Haryana changes everything.</h2><p>Walk into a traditional kitchen as a pot of Basmati comes to a gentle steam, and you notice the aroma long before the lid is lifted. That unmistakable fragrance—earthy, nutty and floral—begins in the alluvial soil of the Indo-Gangetic plains, but it reaches its peak through patience.</p><div class="story-milestones"><div><strong>12–24 Months</strong><p>Careful post-harvest resting reduces moisture naturally.</p></div><div><strong>2× Elongation</strong><p>Aged grains cook longer, fluffier and stay separate.</p></div><div><strong>Taraori Craft</strong><p>Monitored at every stage in our Haryana mills.</p></div></div><h3>Patience as an ingredient.</h3><p>Freshly harvested paddy holds higher natural moisture, which can cause grains to soften too quickly or cling together in the pot. Resting the grain in controlled conditions allows moisture to recede gradually, firming the starch structure inside each slender kernel.</p><p>When that aged grain finally meets warm water and gentle heat—whether in a layered Dum Biryani, a festive Kashmiri Pulao, or a simple bowl of steamed white rice—it elongates gracefully without breaking, releasing the signature aroma that defines Leysha Basmati.</p></article>`
+  heritage: `<img class="story-banner" src="assets/factory.jpg" alt="SSIEL rice processing facility"><article class="story-content"><h2 id="story-title">Our journey since 1967.</h2><p>Behind every pack of Leysha Basmati is over fifty years of hands-on rice milling experience from Shiv Shakti Inter Globe Exports (SSIEL).</p><p>We started with a small local rice mill in 1967, expanded into Shiv Shakti Rice Mill in 1985, and founded SSIEL in 2012 with modern milling technology to bring clean, reliable Basmati rice to kitchens around the world.</p><div class="story-milestones"><div><strong>1967</strong><p>Started with a small local rice mill.</p></div><div><strong>1985</strong><p>Expanded into Shiv Shakti Rice Mill.</p></div><div><strong>2012</strong><p>Founded SSIEL to serve kitchens worldwide.</p></div></div><h3>Great rice for everyday cooking.</h3><p>Whether you are making simple steamed rice for lunch, a quick pulao, or a festive biryani for family and friends, our steam, golden sella, and cream sella varieties make it easy to get fluffy, fragrant results every time.</p><p class="story-source">Read more at <a href="https://ssiel.com/ssiel-history/" target="_blank" rel="noopener">SSIEL’s history ↗</a>.</p></article>`,
+  film: `<video class="story-video" controls playsinline preload="metadata" poster="assets/hero-film-poster.jpg"><source src="assets/hero-film.mp4" type="video/mp4"></video><div class="story-content film-story-content"><h2 id="story-title">From the farm to your plate.</h2><p>See how Leysha Basmati is grown, harvested, aged, and packed with care.</p></div>`,
+  process: `<img class="story-banner" src="assets/lab.jpg" alt="Rice inspection in the SSIEL quality laboratory"><article class="story-content"><h2 id="story-title">Cleaned, aged &amp; lab-tested.</h2><p>Good rice starts with good farming and careful cleaning. Here is how we prepare every batch of Leysha Basmati before it reaches your home.</p><div class="process-steps"><section class="process-step"><h3>1. Farm selection &amp; ageing</h3><p>We buy paddy from trusted farms in Haryana, Punjab, and Western Uttar Pradesh, then rest and age the grains so they cook fluffy and non-sticky.</p></section><section class="process-step"><h3>2. Removing dust &amp; stones</h3><p>Modern cleaning machines remove husks, dust, pebbles, and broken pieces so you get clean, uniform rice in every bag.</p></section><section class="process-step"><h3>3. Gentle polishing &amp; sorting</h3><p>Grains are gently polished and passed through optical colour sorters that spot and remove any discoloured kernels.</p></section><section class="process-step"><h3>4. Size grading &amp; hygienic packing</h3><p>We sort the grains by length so they cook evenly in your pot, then seal them in fresh, moisture-safe packs.</p></section></div><div class="quality-note"><h3>Tested in the pot, not just on paper.</h3><p>Our quality team actually cooks samples from every batch to check grain length, aroma, softness, and taste before approving it for packing.</p></div><p class="story-source">Learn more about <a href="https://ssiel.com/" target="_blank" rel="noopener">SSIEL’s mills ↗</a> and our <a href="https://ssiel.com/ssiel-qc-lab/" target="_blank" rel="noopener">quality lab ↗</a>.</p></article>`,
+  blog: `<img class="story-banner" src="assets/virasat.jpg" alt="Aged Basmati harvest in the foothills of Haryana"><article class="story-content"><h2 id="story-title">Why aged Basmati cooks better and never turns sticky.</h2><p>Have you ever wondered why newly harvested rice often turns soft or clumpy in the pot, while aged Basmati cooks up long, light, and separate? The secret is simply giving the grain time to rest.</p><div class="story-milestones"><div><strong>12–24 Months</strong><p>Natural resting slowly reduces excess moisture inside the grain.</p></div><div><strong>2× Longer</strong><p>Aged grains stretch to nearly double their length when boiled.</p></div><div><strong>Zero Stickiness</strong><p>Firm starch structure keeps every grain separate on your plate.</p></div></div><h3>Why resting the grain matters.</h3><p>Fresh paddy has extra natural moisture, which makes grains burst or stick together when boiled. By storing the rice in clean, temperature-checked warehouses for up to two years, that moisture dries out naturally and the grain firms up from the inside.</p><p>When you soak and cook aged Leysha Basmati at home, the grains absorb water evenly, grow long without breaking, and release that unmistakable Basmati aroma across your kitchen.</p></article>`
 };
 document.querySelectorAll('[data-story]').forEach(button => button.addEventListener('click', () => {
   storyBody.innerHTML = stories[button.dataset.story];
@@ -916,12 +916,12 @@ syncLatestSsielBlogPost();
       boil: true,
       soak: 30,
       cook: 7,
-      rest: 'then 20 min on dum',
+      rest: 'then 20 min on low steam',
       steps: [
-        ['Rinse & soak', 'Rinse the rice until the water runs clear and soak. Meanwhile cook your vegetable masala with whole spices.'],
-        ['Par-boil', 'Boil the drained rice in salted water with bay leaf and cardamom until about 70% cooked. A grain should snap in three.'],
-        ['Drain & layer', 'Drain at once and layer over the masala with mint, coriander, fried onions and saffron milk.'],
-        ['Dum', 'Seal the pot and finish on dum over the lowest flame, then rest before serving.']
+        ['Wash & soak', 'Wash the rice 3–4 times until the water looks clear, then soak for 30 minutes while you prepare your vegetable gravy.'],
+        ['Boil halfway', 'Boil the soaked rice in plenty of salted water with bay leaf and cardamom for 7 minutes until it is about 70% cooked.'],
+        ['Drain & layer', 'Drain the water right away and spread the rice over your vegetables with mint, fried onions, and a little saffron milk.'],
+        ['Cover & steam (Dum)', 'Cover the pot with a tight lid and cook on the lowest flame for 20 minutes. Let it rest 5 minutes before serving.']
       ]
     },
     zarda: {
@@ -929,12 +929,12 @@ syncLatestSsielBlogPost();
       boil: true,
       soak: 30,
       cook: 6,
-      rest: 'then 15 min on dum',
+      rest: 'then 15 min covered on low',
       steps: [
-        ['Rinse & soak', 'Rinse and soak the rice. Steep a pinch of saffron in two spoons of warm milk.'],
-        ['Par-boil', 'Boil the drained rice with cardamom and cloves until about 70% cooked, then drain.'],
-        ['Add sweetness', 'Warm ghee, add the rice, sugar (about half the rice weight), saffron milk, raisins and sliced almonds.'],
-        ['Dum', 'Cover tightly and cook on the lowest flame until the syrup is absorbed. Fold gently and serve.']
+        ['Wash & soak', 'Wash and soak the rice for 30 minutes. Soak a pinch of saffron in two spoons of warm milk.'],
+        ['Boil until tender', 'Boil the drained rice with cardamom and cloves for 6 minutes until nearly cooked, then drain out the water.'],
+        ['Mix with sugar & nuts', 'Heat ghee in a pan, add the rice, sugar (about half the weight of the rice), saffron milk, raisins, and almonds.'],
+        ['Cover & finish', 'Cover tightly and cook on a low flame for 15 minutes until the sugar syrup is absorbed. Fluff gently and serve.']
       ]
     },
     kheer: {
@@ -942,12 +942,12 @@ syncLatestSsielBlogPost();
       milk: 250,
       soak: 30,
       cook: 40,
-      rest: 'stir often, then chill or serve warm',
+      rest: 'stir often, serve warm or chilled',
       steps: [
-        ['Rinse & soak', 'Rinse the rice and soak it in a little water.'],
-        ['Simmer the milk', 'Bring full-fat milk to a boil in a heavy pan, add the drained rice and lower the flame.'],
-        ['Cook low & slow', 'Stir every few minutes until the rice is soft and the milk has thickened to a creamy, flowing consistency.'],
-        ['Sweeten & finish', 'Stir in sugar and cardamom, then garnish with almonds, pistachios and a few strands of saffron.']
+        ['Wash & soak', 'Wash the rice well and soak it in water for 30 minutes so the grains soften evenly.'],
+        ['Boil the milk', 'Bring full-cream milk to a boil in a heavy pan, add the drained rice, and turn the flame to low.'],
+        ['Simmer slowly', 'Cook on a low flame for about 40 minutes, stirring every few minutes until the milk is thick and creamy.'],
+        ['Sweeten & garnish', 'Add sugar and cardamom powder, stir until dissolved, and top with chopped almonds, pistachios, and saffron.']
       ]
     }
   };
