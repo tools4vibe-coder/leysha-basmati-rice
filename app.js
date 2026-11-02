@@ -892,3 +892,108 @@ async function syncLatestSsielBlogPost() {
   }
 }
 syncLatestSsielBlogPost();
+
+// Interactive Culinary Inspiration (#recipes) dish selector, servings stepper, and cooking ratio calculator.
+(function initCulinaryInspiration() {
+  const stylesEl = document.getElementById('styles');
+  const lessBtn = document.getElementById('less');
+  const moreBtn = document.getElementById('more');
+  const servingsEl = document.getElementById('servings');
+  const mLiq = document.getElementById('mLiq');
+  const mRice = document.getElementById('mRice');
+  const mCups = document.getElementById('mCups');
+  const mWater = document.getElementById('mWater');
+  const mRatio = document.getElementById('mRatio');
+  const mSoak = document.getElementById('mSoak');
+  const mCook = document.getElementById('mCook');
+  const mRest = document.getElementById('mRest');
+  const stepsEl = document.getElementById('steps');
+  if (!stylesEl || !servingsEl || !stepsEl) return;
+
+  const recipeStyles = {
+    vegbiryani: {
+      per: 75,
+      boil: true,
+      soak: 30,
+      cook: 7,
+      rest: 'then 20 min on dum',
+      steps: [
+        ['Rinse & soak', 'Rinse the rice until the water runs clear and soak. Meanwhile cook your vegetable masala with whole spices.'],
+        ['Par-boil', 'Boil the drained rice in salted water with bay leaf and cardamom until about 70% cooked. A grain should snap in three.'],
+        ['Drain & layer', 'Drain at once and layer over the masala with mint, coriander, fried onions and saffron milk.'],
+        ['Dum', 'Seal the pot and finish on dum over the lowest flame, then rest before serving.']
+      ]
+    },
+    zarda: {
+      per: 60,
+      boil: true,
+      soak: 30,
+      cook: 6,
+      rest: 'then 15 min on dum',
+      steps: [
+        ['Rinse & soak', 'Rinse and soak the rice. Steep a pinch of saffron in two spoons of warm milk.'],
+        ['Par-boil', 'Boil the drained rice with cardamom and cloves until about 70% cooked, then drain.'],
+        ['Add sweetness', 'Warm ghee, add the rice, sugar (about half the rice weight), saffron milk, raisins and sliced almonds.'],
+        ['Dum', 'Cover tightly and cook on the lowest flame until the syrup is absorbed. Fold gently and serve.']
+      ]
+    },
+    kheer: {
+      per: 20,
+      milk: 250,
+      soak: 30,
+      cook: 40,
+      rest: 'stir often, then chill or serve warm',
+      steps: [
+        ['Rinse & soak', 'Rinse the rice and soak it in a little water.'],
+        ['Simmer the milk', 'Bring full-fat milk to a boil in a heavy pan, add the drained rice and lower the flame.'],
+        ['Cook low & slow', 'Stir every few minutes until the rice is soft and the milk has thickened to a creamy, flowing consistency.'],
+        ['Sweeten & finish', 'Stir in sugar and cardamom, then garnish with almonds, pistachios and a few strands of saffron.']
+      ]
+    }
+  };
+
+  let currentStyle = 'vegbiryani';
+  let serv = 4;
+
+  function updateMeasures() {
+    const s = recipeStyles[currentStyle];
+    const g = serv * s.per;
+    const cups = g / 190;
+    const water = s.milk ? serv * s.milk : s.boil ? g * 8 : Math.round(cups * s.ratio * 240 / 10) * 10;
+    mLiq.textContent = s.milk ? 'Milk' : 'Water';
+    servingsEl.textContent = serv;
+    mRice.textContent = `${g} g`;
+    mCups.textContent = `about ${cups.toFixed(1)} cups`;
+    mWater.textContent = water >= 1000 ? `${(water / 1000).toFixed(1)} L` : `${water} ml`;
+    mRatio.textContent = s.milk ? 'full-fat milk' : s.boil ? 'a full pot, drained later' : `1 : ${s.ratio} rice to water`;
+    mSoak.textContent = `${s.soak} min`;
+    mCook.textContent = `${s.cook} min`;
+    mRest.textContent = s.rest;
+    stepsEl.innerHTML = s.steps.map(t => `<li><b>${t[0]}</b><span>${t[1]}</span></li>`).join('');
+  }
+
+  stylesEl.addEventListener('click', event => {
+    const btn = event.target.closest('button');
+    if (!btn) return;
+    currentStyle = btn.getAttribute('data-style');
+    stylesEl.querySelectorAll('button').forEach(x => {
+      x.setAttribute('aria-pressed', String(x === btn));
+    });
+    document.querySelectorAll('.cook-bg').forEach(bg => {
+      bg.classList.toggle('on', bg.getAttribute('data-k') === currentStyle);
+    });
+    updateMeasures();
+  });
+
+  lessBtn?.addEventListener('click', () => {
+    serv = Math.max(1, serv - 1);
+    updateMeasures();
+  });
+
+  moreBtn?.addEventListener('click', () => {
+    serv = Math.min(12, serv + 1);
+    updateMeasures();
+  });
+
+  updateMeasures();
+})();
