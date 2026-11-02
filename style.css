@@ -45,7 +45,7 @@ header .nav-item{border:0;padding:10px 0;background:none;color:var(--muted);font
 /* Editorial story collection: a quiet introduction beside three visual chapters. */
 .craft-journal{padding-block:95px 65px;border-top:1px solid var(--line)}
 .journal-layout{display:grid;grid-template-columns:minmax(230px,.95fr) minmax(0,2.65fr);gap:45px;align-items:center}
-.journal-intro h2{font-size:clamp(42px,3.9vw,64px);line-height:1.09;letter-spacing:-1px;margin:25px 0}
+.journal-intro h2{font-size:clamp(32px,2.8vw,44px);line-height:1.1;letter-spacing:-.8px;margin:0 0 18px}
 .journal-intro>p{font-size:16px;color:var(--muted);max-width:310px;line-height:1.72}
 .journal-explore{border:0;gap:25px;margin-top:14px;padding:15px 20px;border-radius:5px}
 .journal-note{display:block;font-size:11px;font-weight:600;letter-spacing:1.5px;margin-top:25px}
