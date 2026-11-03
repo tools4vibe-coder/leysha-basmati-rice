@@ -2713,12 +2713,11 @@ header .nav-group.is-open>.nav-item:before{
 }
 
 /* Keep curvy display font (Avigea) only on primary section titles; use clean Leysha Helvetica on all card, item, and sub-headings. */
-h3,
+h3:not(.grain-callout h3),
 .card-title,
 .quality-title,
 .ticket-name,
 .social-card h3,
-.grain-callout h3,
 .cook .steps b,
 .cook .measures dd,
 .cook .stepper output,
@@ -2734,6 +2733,11 @@ summary,
  font-weight:700;
  letter-spacing:-.02em
 }
+.grain-callout h3{
+ font-family:var(--serif);
+ font-weight:400;
+ letter-spacing:-.5px
+}
 .card-title{
  font-size:clamp(22px,2vw,30px);
  line-height:1.18
@@ -2741,10 +2745,6 @@ summary,
 .quality-title{
  font-size:clamp(20px,1.75vw,24px);
  line-height:1.25
-}
-.grain-callout h3{
- font-size:clamp(26px,2.5vw,38px);
- line-height:1.16
 }
 .ticket-name{
  font-size:clamp(22px,2vw,30px);
