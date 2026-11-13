@@ -243,12 +243,11 @@ nav.querySelectorAll('a, .nav-stamp-card').forEach(link => link.addEventListener
   nav.classList.remove('open');
 }));
 const products = {
-  shahi: {name: 'Shahi Pasand', image: 'shahi-cutout.png', copy: 'Soft, sweet-smelling Basmati grains that cook fluffy and make everyday family meals feel special.', sizes: 'Shown in a 1 kg pack. Contact our team for available pack sizes.'},
-  supermax: {name: 'SuperMaxxx', image: 'supermax-cutout.png', copy: 'Extra-long, slender Basmati grains with a rich natural aroma—great for pulao, fried rice, and festive cooking.', sizes: 'Shown in a 1 kg pack. Contact our team for available pack sizes.'},
-  virasat: {name: 'Virasat Biryani', image: 'shahi-cutout.png', copy: 'Naturally aged extra-long Basmati that stretches to twice its length when cooked, made for classic layered biryanis.', sizes: 'Available in 1 kg, 5 kg and 10 kg packs.'},
-  nainital: {name: 'Nainital Special', image: 'nainital-cutout.png', copy: 'Soft, fragrant steam Basmati made for daily home-cooked meals, jeera rice, and light vegetable pulao.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 30 kg packs.'},
-  goldensella: {name: 'Golden Sella', image: 'supermax-cutout.png', copy: 'Parboiled golden Basmati that stays firm, separate, and never breaks—even during slow dum cooking for large gatherings.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'},
-  creamsella: {name: 'Cream Sella', image: 'nainital-cutout.png', copy: 'Creamy white parboiled Basmati with a soft texture and reliable grain separation in every pot.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'}
+  nayaab: {name: 'Nayaab 1121 XXXL', image: 'pack-nayaab.webp', copy: 'Maharaja Special Range — expertly aged 1121 XXXL grains with signature aroma and the world’s longest Basmati grain length for royal biryanis and grand celebrations.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'},
+  utsav: {name: 'Utsav Golden Sella', image: 'pack-utsav.webp', copy: 'Premium Select Range — soft, fluffy Golden Sella Basmati with signature aroma made to elevate everyday family meals and festive pulaos.', sizes: 'Available in 1 kg, 5 kg, 10 kg and 25 kg packs.'},
+  superdubar: {name: 'Super Dubar Golden Sella', image: 'pack-super-dubar.webp', copy: 'Smart Kitchen Range — your daily value pack of Golden Sella Basmati that cooks consistently with non-sticky, separate grains.', sizes: 'Available in 5 kg, 10 kg and 25 kg packs.'},
+  supertibar: {name: 'Super Tibar Golden Sella', image: 'pack-super-tibar.webp', copy: 'Family Feast Range — homely goodness worth sharing, offering consistent cooking and fluffy Golden Sella grains for daily meals and jeera rice.', sizes: 'Available in 5 kg, 10 kg and 25 kg packs.'},
+  mogra: {name: 'Mogra Golden Sella', image: 'pack-mogra.webp', copy: 'Quick Meals Range — sweet, soft small Basmati grains that make everyday comfort recipes, khichdi, and creamy kheer effortless.', sizes: 'Available in 5 kg, 10 kg and 25 kg packs.'}
 };
 const dialog = document.querySelector('#product-dialog');
 document.querySelectorAll('[data-product]').forEach(button => button.addEventListener('click', () => {
@@ -976,7 +975,7 @@ syncLatestSsielBlogPost();
       cook: 7,
       rest: 'then 20 min on low steam',
       steps: [
-        ['Wash & soak', 'Wash the rice 3–4 times until the water looks clear, then soak for 30 minutes while you prepare your vegetable gravy.'],
+        ['Wash & soak', 'Wash Leysha Nayaab 1121 XXXL rice 3–4 times until clear, then soak for 30 minutes while you prepare your vegetable gravy.'],
         ['Boil halfway', 'Boil the soaked rice in plenty of salted water with bay leaf and cardamom for 7 minutes until it is about 70% cooked.'],
         ['Drain & layer', 'Drain the water right away and spread the rice over your vegetables with mint, fried onions, and a little saffron milk.'],
         ['Cover & steam (Dum)', 'Cover the pot with a tight lid and cook on the lowest flame for 20 minutes. Let it rest 5 minutes before serving.']
@@ -989,23 +988,49 @@ syncLatestSsielBlogPost();
       cook: 6,
       rest: 'then 15 min covered on low',
       steps: [
-        ['Wash & soak', 'Wash and soak the rice for 30 minutes. Soak a pinch of saffron in two spoons of warm milk.'],
-        ['Boil until tender', 'Boil the drained rice with cardamom and cloves for 6 minutes until nearly cooked, then drain out the water.'],
+        ['Wash & soak', 'Wash and soak Leysha Utsav Golden Sella rice for 30 minutes. Warm two spoons of milk with a pinch of saffron.'],
+        ['Boil until tender', 'Boil the drained rice with green cardamom and cloves for 6 minutes until nearly cooked, then drain out the water.'],
         ['Mix with sugar & nuts', 'Heat ghee in a pan, add the rice, sugar (about half the weight of the rice), saffron milk, raisins, and almonds.'],
-        ['Cover & finish', 'Cover tightly and cook on a low flame for 15 minutes until the sugar syrup is absorbed. Fluff gently and serve.']
+        ['Cover & finish', 'Cover tightly and cook on a low flame for 15 minutes until the syrup is absorbed. Fluff gently and serve warm.']
+      ]
+    },
+    pulao: {
+      per: 65,
+      ratio: 1.8,
+      soak: 25,
+      cook: 10,
+      rest: 'then 5 min covered off heat',
+      steps: [
+        ['Wash & soak', 'Rinse Leysha Super Dubar rice 3 times until the water looks clear, then soak for 25 minutes so the grains cook evenly.'],
+        ['Sauté spices & veggies', 'Warm ghee in a pot, crackle cumin, bay leaf, and cloves, then sauté sliced onions, peas, carrots, and beans for 3 minutes.'],
+        ['Simmer on low', 'Add the drained rice, measured water, and salt. Bring to a boil, then cover and simmer on a low flame for 10 minutes.'],
+        ['Rest & fluff', 'Turn off the stove and let the pot rest covered for 5 minutes before fluffing the non-sticky grains gently with a fork.']
+      ]
+    },
+    jeera: {
+      per: 65,
+      ratio: 1.9,
+      soak: 20,
+      cook: 9,
+      rest: 'then 5 min covered off heat',
+      steps: [
+        ['Wash & soak', 'Wash Leysha Super Tibar rice gently until clear and soak for 20 minutes for light, fluffy grains.'],
+        ['Temper cumin in ghee', 'Melt a generous spoon of ghee in a pan and let cumin seeds, a slit green chilli, and a bay leaf sizzle until fragrant.'],
+        ['Add rice & water', 'Fold in the drained rice gently for 30 seconds, pour in the measured water and salt, and bring to a lively boil.'],
+        ['Cover & steam', 'Cover tightly, cook on low heat for 9 minutes until all water is absorbed, rest 5 minutes, and top with fresh coriander.']
       ]
     },
     kheer: {
       per: 20,
       milk: 250,
       soak: 30,
-      cook: 40,
+      cook: 35,
       rest: 'stir often, serve warm or chilled',
       steps: [
-        ['Wash & soak', 'Wash the rice well and soak it in water for 30 minutes so the grains soften evenly.'],
-        ['Boil the milk', 'Bring full-cream milk to a boil in a heavy pan, add the drained rice, and turn the flame to low.'],
-        ['Simmer slowly', 'Cook on a low flame for about 40 minutes, stirring every few minutes until the milk is thick and creamy.'],
-        ['Sweeten & garnish', 'Add sugar and cardamom powder, stir until dissolved, and top with chopped almonds, pistachios, and saffron.']
+        ['Wash & soak', 'Wash Leysha Mogra rice well and soak it in water for 30 minutes so the sweet, soft small grains cook smoothly.'],
+        ['Boil the milk', 'Bring full-cream milk to a boil in a heavy pan, add the drained Mogra rice, and turn the flame to low.'],
+        ['Simmer slowly', 'Cook on a low flame for about 35 minutes, stirring every few minutes until the milk turns thick, rich, and creamy.'],
+        ['Sweeten & garnish', 'Add sugar and cardamom powder, stir until dissolved, and garnish with chopped almonds, pistachios, and saffron.']
       ]
     }
   };
