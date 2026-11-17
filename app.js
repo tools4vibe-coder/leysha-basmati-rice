@@ -1121,6 +1121,10 @@ syncLatestSsielBlogPost();
     document.querySelectorAll('.cook-dish-item').forEach(item => {
       item.classList.toggle('is-active', item.getAttribute('data-cook-visual') === currentStyle);
     });
+    if (stylesEl.scrollWidth > stylesEl.clientWidth) {
+      const targetLeft = btn.offsetLeft - (stylesEl.clientWidth - btn.offsetWidth) * 0.5;
+      stylesEl.scrollTo({left: Math.max(0, targetLeft), behavior: reducedMotion.matches ? 'auto' : 'smooth'});
+    }
     updateMeasures();
   });
 
@@ -1314,21 +1318,27 @@ syncLatestSsielBlogPost();
   renderShowcase();
 })();
 
-// Pinned 5-card "Field to Fork" section (#field-to-fork) with stacking cards, clickable stage rail, video lifecycle, and Taraori world-map wipe.
+// Hover-scoped 5-card "Field to Fork" section (#field-to-fork): wheel scrolling inside .ftf-stack advances cards, while scrolling anywhere else scrolls the page normally.
 (() => {
   const ftfSection = document.querySelector('#field-to-fork.ftf');
   if (!ftfSection) return;
+  const ftfStack = ftfSection.querySelector('.ftf-stack');
   const cards = [...ftfSection.querySelectorAll('.fc')];
   const railItems = [...ftfSection.querySelectorAll('.ftf-rail li')];
   const stepBtns = [...ftfSection.querySelectorAll('.ftf-step')];
   const railLine = ftfSection.querySelector('.ftf-line');
   const mapWipe = ftfSection.querySelector('#ftf-map-wipe');
   const cardVideos = cards.map(card => card.querySelector('video.fc-vid'));
-  const supportsCssScrollTimeline = () => !reducedMotion.matches && CSS.supports('animation-timeline: scroll()') && CSS.supports('animation-range: 0% 100%');
+  const lastIdx = Math.max(1, cards.length - 1);
 
   let activeIdx = -1;
   let ftfInViewport = false;
-  let ftfRaf = 0;
+  let currentU = 0;
+  let targetU = 0;
+  let animRaf = 0;
+  let snapTimer = 0;
+  let lastWheelDir = 0;
+  let boundaryCooldownUntil = 0;
 
   function syncVideos(enters, unders) {
     cardVideos.forEach((vid, i) => {
@@ -1342,30 +1352,21 @@ syncLatestSsielBlogPost();
     });
   }
 
-  function renderFieldToFork() {
-    ftfRaf = 0;
-    const header = filmHeaderHeight();
-    const bounds = ftfSection.getBoundingClientRect();
-    const screen = Math.max(1, innerHeight - header);
-    const travel = Math.max(1, ftfSection.offsetHeight - screen);
-    const scrolled = Math.min(travel, Math.max(0, header - bounds.top));
-    const rawP = scrolled / travel;
-    const normP = Math.min(1, Math.max(0, (rawP - 0.04) / 0.92));
-    const lastIdx = cards.length - 1;
-    const u = normP * lastIdx;
-
+  function applyU(u) {
+    const clampedU = Math.min(lastIdx, Math.max(0, u));
+    const normP = clampedU / lastIdx;
     const enters = [];
     const unders = [];
     let nextIdx = 0;
 
     for (let k = 0; k <= lastIdx; k++) {
-      const enter = k === 0 ? 0 : Math.min(1, Math.max(0, k - u));
-      const under = k === lastIdx ? 0 : Math.min(1, Math.max(0, u - k));
+      const enter = k === 0 ? 0 : Math.min(1, Math.max(0, k - clampedU));
+      const under = k === lastIdx ? 0 : Math.min(1, Math.max(0, clampedU - k));
       enters.push(enter);
       unders.push(under);
       cards[k].style.setProperty('--enter', enter.toFixed(4));
       cards[k].style.setProperty('--under', under.toFixed(4));
-      if (k > 0 && u >= k - 0.45) nextIdx = k;
+      if (k > 0 && clampedU >= k - 0.45) nextIdx = k;
     }
 
     if (nextIdx !== activeIdx) {
@@ -1381,7 +1382,7 @@ syncLatestSsielBlogPost();
       }
     }
 
-    if (!supportsCssScrollTimeline() && railLine) {
+    if (railLine) {
       railLine.style.setProperty('--rp', normP.toFixed(4));
     }
 
@@ -1399,24 +1400,91 @@ syncLatestSsielBlogPost();
     syncVideos(enters, unders);
   }
 
-  function scheduleFieldToFork() {
-    if (!ftfInViewport || ftfRaf) return;
-    ftfRaf = requestAnimationFrame(renderFieldToFork);
+  function tickAnim() {
+    animRaf = 0;
+    if (reducedMotion.matches) {
+      currentU = targetU;
+      applyU(currentU);
+      return;
+    }
+    const diff = targetU - currentU;
+    if (Math.abs(diff) < 0.0015) {
+      currentU = targetU;
+      applyU(currentU);
+      return;
+    }
+    currentU += diff * 0.16;
+    applyU(currentU);
+    animRaf = requestAnimationFrame(tickAnim);
   }
+
+  function startAnim() {
+    if (!animRaf) {
+      animRaf = requestAnimationFrame(tickAnim);
+    }
+  }
+
+  ftfStack?.addEventListener('wheel', event => {
+    const dy = event.deltaMode === 1 ? event.deltaY * 36 : event.deltaMode === 2 ? event.deltaY * 360 : event.deltaY;
+    if (Math.abs(dy) < 0.5 || Math.abs(event.deltaX) > Math.abs(event.deltaY) * 1.5) return;
+
+    const now = performance.now();
+    const atStart = currentU <= 0.02 && targetU <= 0.02;
+    const atEnd = currentU >= lastIdx - 0.02 && targetU >= lastIdx - 0.02;
+    if ((dy < 0 && atStart && now > boundaryCooldownUntil) || (dy > 0 && atEnd && now > boundaryCooldownUntil)) {
+      return;
+    }
+
+    event.preventDefault();
+    const prevTarget = targetU;
+    targetU = Math.min(lastIdx, Math.max(0, targetU + dy / 250));
+    lastWheelDir = Math.sign(dy);
+
+    if ((prevTarget < lastIdx - 0.02 && targetU >= lastIdx - 0.02) || (prevTarget > 0.02 && targetU <= 0.02)) {
+      boundaryCooldownUntil = now + 380;
+    }
+
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => {
+      const base = Math.floor(targetU);
+      const frac = targetU - base;
+      if (frac > 0.001 && frac < 0.999) {
+        targetU = lastWheelDir > 0
+          ? (frac > 0.2 ? Math.min(lastIdx, base + 1) : base)
+          : (frac < 0.8 ? base : Math.min(lastIdx, base + 1));
+        startAnim();
+      }
+    }, 140);
+
+    startAnim();
+  }, {passive: false});
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  ftfStack?.addEventListener('touchstart', event => {
+    const t = event.touches[0];
+    if (!t) return;
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+  }, {passive: true});
+
+  ftfStack?.addEventListener('touchend', event => {
+    const t = event.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      targetU = dx < 0 ? Math.min(lastIdx, Math.round(targetU) + 1) : Math.max(0, Math.round(targetU) - 1);
+      startAnim();
+    }
+  }, {passive: true});
 
   stepBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      const k = Math.min(cards.length - 1, Math.max(0, Number(btn.dataset.ftfStep) || 0));
-      const header = filmHeaderHeight();
-      const screen = Math.max(1, innerHeight - header);
-      const travel = Math.max(1, ftfSection.offsetHeight - screen);
-      const sectionStart = window.scrollY + ftfSection.getBoundingClientRect().top - header;
-      const lastIdx = Math.max(1, cards.length - 1);
-      const targetP = k === 0 ? 0.02 : k === lastIdx ? 0.98 : 0.04 + (k / lastIdx) * 0.92;
-      window.scrollTo({
-        top: sectionStart + targetP * travel,
-        behavior: reducedMotion.matches ? 'auto' : 'smooth'
-      });
+      const k = Math.min(lastIdx, Math.max(0, Number(btn.dataset.ftfStep) || 0));
+      clearTimeout(snapTimer);
+      targetU = k;
+      startAnim();
     });
   });
 
@@ -1424,7 +1492,7 @@ syncLatestSsielBlogPost();
     const wasActive = ftfInViewport;
     ftfInViewport = entries[0].isIntersecting;
     if (ftfInViewport && !wasActive) {
-      renderFieldToFork();
+      applyU(currentU);
     } else if (!ftfInViewport && wasActive) {
       cardVideos.forEach(vid => {
         if (vid && !vid.paused) vid.pause();
@@ -1434,12 +1502,10 @@ syncLatestSsielBlogPost();
   ftfObserver.observe(ftfSection);
 
   reducedMotion.addEventListener('change', () => {
-    renderFieldToFork();
+    currentU = Math.round(targetU);
+    targetU = currentU;
+    applyU(currentU);
   });
 
-  window.addEventListener('scroll', scheduleFieldToFork, {passive: true});
-  window.addEventListener('resize', () => {
-    renderFieldToFork();
-  });
-  renderFieldToFork();
+  applyU(currentU);
 })();
