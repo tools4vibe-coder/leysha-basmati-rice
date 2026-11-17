@@ -266,72 +266,6 @@ dialog.addEventListener('click', event => { if (event.target === dialog) {
   if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
 }});
 
-// Horizontal stamp-ticket carousel in #range with arrow controls, dots, and scrollsnapchange sync.
-const rangeCarousel = document.querySelector('#range-carousel');
-const rangeTickets = [...document.querySelectorAll('#range-carousel .stamp-ticket')];
-const rangeDots = [...document.querySelectorAll('.range-dot')];
-const rangeArrows = [...document.querySelectorAll('.range-arrow')];
-
-function setActiveRangeSlide(index) {
-  const clamped = Math.max(0, Math.min(rangeDots.length - 1, index));
-  rangeDots.forEach((dot, i) => {
-    const active = i === clamped;
-    dot.classList.toggle('is-active', active);
-    if (active) dot.setAttribute('aria-current', 'true');
-    else dot.removeAttribute('aria-current');
-  });
-}
-
-function scrollToRangeSlide(index) {
-  const target = rangeTickets[index];
-  if (!target || !rangeCarousel) return;
-  const scrollerLeft = rangeCarousel.getBoundingClientRect().left;
-  const targetLeft = target.getBoundingClientRect().left;
-  rangeCarousel.scrollBy({left: targetLeft - scrollerLeft - 10, behavior: reducedMotion.matches ? 'auto' : 'smooth'});
-  setActiveRangeSlide(index);
-}
-
-rangeArrows.forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (!rangeCarousel || !rangeTickets.length) return;
-    const dir = Number(btn.dataset.rangeDir) || 1;
-    const cardWidth = rangeTickets[0].getBoundingClientRect().width + 30;
-    rangeCarousel.scrollBy({left: dir * cardWidth, behavior: reducedMotion.matches ? 'auto' : 'smooth'});
-  });
-});
-
-rangeDots.forEach(dot => {
-  dot.addEventListener('click', () => scrollToRangeSlide(Number(dot.dataset.rangeSlide) || 0));
-});
-
-if (rangeCarousel) {
-  if ('onscrollsnapchange' in HTMLElement.prototype) {
-    rangeCarousel.addEventListener('scrollsnapchange', event => {
-      const snapped = event.snapTargetInline;
-      const idx = rangeTickets.indexOf(snapped);
-      if (idx !== -1) setActiveRangeSlide(idx);
-    });
-  }
-  let rangeScrollTick = 0;
-  rangeCarousel.addEventListener('scroll', () => {
-    if (rangeScrollTick) return;
-    rangeScrollTick = requestAnimationFrame(() => {
-      rangeScrollTick = 0;
-      const scrollerLeft = rangeCarousel.getBoundingClientRect().left;
-      let bestIdx = 0;
-      let bestDist = Infinity;
-      rangeTickets.forEach((card, i) => {
-        const dist = Math.abs(card.getBoundingClientRect().left - scrollerLeft);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestIdx = i;
-        }
-      });
-      setActiveRangeSlide(bestIdx);
-    });
-  }, {passive: true});
-}
-
 const filmFrame = document.querySelector('.film-reveal');
 const film = document.querySelector('#hero-film');
 const filmToggle = document.querySelector('.film-toggle');
@@ -631,7 +565,7 @@ function syncMobileQualityCards() {
     const rect = item.getBoundingClientRect();
     const offset = (rect.left + rect.width * 0.5) - trackCenter;
     const dist = Math.abs(offset);
-    const rot = Math.max(-55, Math.min(55, (offset / Math.max(1, trackRect.width)) * 42));
+    const rot = Math.max(-7, Math.min(7, (offset / Math.max(1, trackRect.width)) * 9));
     item.style.setProperty('--card-bowl-rot', `${rot.toFixed(1)}deg`);
     if (dist < closestDist) {
       closestDist = dist;
@@ -664,7 +598,8 @@ const grainSection = document.querySelector('.grain-scroll');
 const grainCanvas = document.querySelector('#grain-canvas');
 const grainContext = grainCanvas.getContext('2d');
 const grainFrames = new Array(120);
-let grainTarget = 0, grainDrawn = -1, grainTick = 0;
+let grainTarget = 0, grainTargetFloat = 0, grainCurrent = 0, grainDrawn = -1, grainTick = 0;
+let grainInViewport = true;
 // Keep annotations above the transparent grain while their source scenes scroll beneath it.
 const grainStage = document.querySelector('.grain-scroll-stage');
 const grainScenes = [...document.querySelectorAll('.grain-scene')].map(scene => {
@@ -691,31 +626,107 @@ const grainScenes = [...document.querySelectorAll('.grain-scene')].map(scene => 
   }
   return {scene, callout, leader, featureCallout, featureLeader};
 });
+function pickLoadedGrainFrame(index) {
+  const exact = grainFrames[index];
+  if (exact?.complete && exact.naturalWidth) return {frame: exact, index};
+  for (let offset = 1; offset < grainFrames.length; offset++) {
+    const prev = index - offset;
+    if (prev >= 0 && grainFrames[prev]?.complete && grainFrames[prev].naturalWidth) return {frame: grainFrames[prev], index: prev};
+    const next = index + offset;
+    if (next < grainFrames.length && grainFrames[next]?.complete && grainFrames[next].naturalWidth) return {frame: grainFrames[next], index: next};
+  }
+  return null;
+}
+function mapScrollToGrainFrame(scrolled, endScroll, screen, boundsTop) {
+  const d0 = grainScenes[0].scene.getBoundingClientRect().top - boundsTop;
+  const d1 = grainScenes[1].scene.getBoundingClientRect().top - boundsTop;
+  const d2 = grainScenes[2].scene.getBoundingClientRect().top - boundsTop;
+  // Align the 3 carved 3D reliefs (Farms=24, Mill=55, Bowl=88) with each scene's focal scroll window,
+  // hold Bowl/Table (86..90) squarely across Scene 2 ("Today."), and finish the 360° turn (90..119)
+  // only once 60% of the rice grain has scrolled out of the frame (endScroll).
+  const rawStops = [
+    [0, 0],
+    [d0 + screen * 0.22, 24],
+    [d1 - screen * 0.50, 38],
+    [d1 + screen * 0.22, 55],
+    [d2 - screen * 0.50, 73],
+    [d2 + screen * 0.16, 86],
+    [d2 + screen * 0.34, 90],
+    [endScroll, grainFrames.length - 1]
+  ];
+  const stops = [rawStops[0]];
+  for (let i = 1; i < rawStops.length; i++) {
+    const minPos = stops[i - 1][0] + 1;
+    stops.push([Math.max(minPos, rawStops[i][0]), rawStops[i][1]]);
+  }
+  const maxPos = stops[stops.length - 1][0];
+  const clampedScroll = Math.min(maxPos, Math.max(0, scrolled));
+  for (let i = 0; i < stops.length - 1; i++) {
+    const [sA, fA] = stops[i];
+    const [sB, fB] = stops[i + 1];
+    if (clampedScroll <= sB) {
+      const t = (clampedScroll - sA) / Math.max(1, sB - sA);
+      return fA + t * (fB - fA);
+    }
+  }
+  return grainFrames.length - 1;
+}
 function drawGrain() {
   grainTick = 0;
-  const frame = grainFrames[grainTarget];
-  if (frame?.complete && frame.naturalWidth && grainDrawn !== grainTarget) {
+  if (reducedMotion.matches) {
+    grainCurrent = grainTargetFloat;
+  } else {
+    const diff = grainTargetFloat - grainCurrent;
+    if (Math.abs(diff) > 0.06) {
+      grainCurrent += diff * 0.32;
+      if (grainInViewport) grainTick = requestAnimationFrame(drawGrain);
+    } else {
+      grainCurrent = grainTargetFloat;
+    }
+  }
+  grainTarget = Math.min(grainFrames.length - 1, Math.max(0, Math.round(grainCurrent)));
+  const resolved = pickLoadedGrainFrame(grainTarget);
+  if (resolved && grainDrawn !== resolved.index) {
     grainContext.imageSmoothingEnabled = true;
     grainContext.imageSmoothingQuality = 'high';
     grainContext.clearRect(0, 0, grainCanvas.width, grainCanvas.height);
-    grainContext.drawImage(frame, 0, 0, grainCanvas.width, grainCanvas.height);
-    grainDrawn = grainTarget;
+    grainContext.drawImage(resolved.frame, 0, 0, grainCanvas.width, grainCanvas.height);
+    grainDrawn = resolved.index;
   }
 }
 function updateGrainScroll() {
+  if (!grainInViewport) return;
   const header = filmHeaderHeight();
   const bounds = grainSection.getBoundingClientRect();
-  const travel = grainSection.offsetHeight - (innerHeight-header);
-  const progress = Math.min(1,Math.max(0,(header-bounds.top)/travel));
-  grainTarget = Math.round(progress*(grainFrames.length-1));
-  grainSection.style.setProperty('--grain-progress',progress);
+  const screen = Math.max(1, innerHeight - header);
+  const pinTravel = Math.max(1, grainSection.offsetHeight - screen);
+  const mobileStage = innerWidth <= 650;
+  const canvasH = screen * (mobileStage ? 0.72 : 1);
+  const canvasTopInStage = (mobileStage ? 0.37 : 0.50) * screen - canvasH * 0.5;
+  const grainTopInStage = canvasTopInStage + 0.056 * canvasH;
+  const grainHeight = (0.931 - 0.056) * canvasH;
+  // Extra scroll distance after unpinning until 60% of the rice grain has exited the frame above the header.
+  const exit60 = Math.max(1, grainTopInStage + 0.60 * grainHeight);
+  const endScroll = pinTravel + exit60;
+  const rawScrolled = Math.max(0, header - bounds.top);
+  const pinnedScrolled = Math.min(pinTravel, rawScrolled);
+  const rotationScrolled = Math.min(endScroll, rawScrolled);
+  const progress = rotationScrolled / endScroll;
+  grainSection.style.setProperty('--grain-progress', pinnedScrolled / pinTravel);
   // Scenes and annotations move naturally with the page; only the grain stays centred.
   const firstSceneTop = grainScenes[0].scene.getBoundingClientRect().top;
   const lastSceneBottom = grainScenes[grainScenes.length - 1].scene.getBoundingClientRect().bottom;
   const sceneIndex = (firstSceneTop > header + 42 || lastSceneBottom < header + 42)
     ? 'lead'
-    : String(Math.min(2,Math.max(0,Math.floor((header-firstSceneTop+(innerHeight-header)/2)/(innerHeight-header)))));
-  grainSection.dataset.scene=sceneIndex;
+    : String(Math.min(2, Math.max(0, Math.floor((header - firstSceneTop + screen / 2) / screen))));
+  grainSection.dataset.scene = sceneIndex;
+  if (reducedMotion.matches) {
+    // Respect prefers-reduced-motion by snapping cleanly to each scene's static carved relief instead of spinning continuously.
+    grainTargetFloat = sceneIndex === '0' ? 24 : sceneIndex === '1' ? 55 : (sceneIndex === '2' || (rawScrolled > pinTravel && rawScrolled < endScroll)) ? 88 : (progress > 0.5 ? 119 : 0);
+  } else {
+    grainTargetFloat = mapScrollToGrainFrame(rotationScrolled, endScroll, screen, bounds.top);
+  }
+  grainTarget = Math.round(grainTargetFloat);
   grainScenes.forEach(({scene,callout,leader,featureCallout,featureLeader})=>{
     const rect=scene.getBoundingClientRect();
     const screen=innerHeight-header;
@@ -783,17 +794,40 @@ function updateGrainScroll() {
   if (!grainTick) grainTick=requestAnimationFrame(drawGrain);
 }
 function loadGrainFrame(i) {
-  const img=new Image();
-  grainFrames[i]=img;
-  img.onload=()=>{if(i===grainTarget || grainDrawn<0) {grainTarget=grainDrawn<0?i:grainTarget;drawGrain();}};
-  img.src=`assets/grain-scroll-clean/${String(i).padStart(3,'0')}.webp?v=carved-grain-v2`;
+  if (grainFrames[i]) return;
+  const img = new Image();
+  grainFrames[i] = img;
+  img.onload = () => {
+    if (i === grainTarget || grainDrawn < 0) {
+      if (!grainTick) grainTick = requestAnimationFrame(drawGrain);
+    }
+  };
+  img.src = `assets/grain-scroll-clean/${String(i).padStart(3,'0')}.webp?v=carved-grain-v4`;
 }
 loadGrainFrame(0);
-// Load the sequence as the reader approaches the section, rather than blocking the opening page.
-const grainLoader = new IntersectionObserver(entries=>{if(entries[0].isIntersecting){for(let i=1;i<grainFrames.length;i++)loadGrainFrame(i);grainLoader.disconnect();}},{rootMargin:'1200px'});
+// Load key sculpted frames first, then stream the full 120-frame rotation as the reader approaches the section.
+const grainLoader = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    [24, 38, 55, 73, 88, 119].forEach(loadGrainFrame);
+    for (let i = 1; i < grainFrames.length; i++) loadGrainFrame(i);
+    grainLoader.disconnect();
+  }
+}, {rootMargin: '1400px 0px'});
 grainLoader.observe(grainSection);
-window.addEventListener('scroll',updateGrainScroll,{passive:true});
-window.addEventListener('resize',updateGrainScroll);
+// Pause scroll/canvas calculations when the grain section is far outside the viewport.
+const grainActivityObserver = new IntersectionObserver(entries => {
+  const wasActive = grainInViewport;
+  grainInViewport = entries[0].isIntersecting;
+  if (grainInViewport && !wasActive) updateGrainScroll();
+}, {rootMargin: '350px 0px'});
+grainActivityObserver.observe(grainSection);
+window.addEventListener('scroll', updateGrainScroll, {passive: true});
+window.addEventListener('resize', () => {
+  const prev = grainInViewport;
+  grainInViewport = true;
+  updateGrainScroll();
+  grainInViewport = prev;
+});
 updateGrainScroll();
 
 // Scroll parallax, bidirectional scroll rotation, and cursor proximity repulsion for the hero grains.
@@ -817,6 +851,27 @@ const heroGrains = [...document.querySelectorAll('.hero-grain')].map((el, i) => 
   rx: 0, ry: 0, rrot: 0,
   tx: 0, ty: 0, trot: 0
 }));
+const showcaseGrainsConfig = [
+  {vy: -0.022, vx: -0.008, vrot: 0.045, depth: 1.0},  // show-g1 (mid)
+  {vy: -0.038, vx: -0.014, vrot: -0.068, depth: 1.35},// show-g2 (near)
+  {vy: -0.012, vx: -0.004, vrot: -0.028, depth: 0.55},// show-g3 (far)
+  {vy: -0.024, vx: -0.007, vrot: 0.052, depth: 1.05}, // show-g4 (mid)
+  {vy: -0.035, vx: -0.011, vrot: 0.062, depth: 1.28}, // show-g5 (near)
+  {vy: -0.014, vx: -0.005, vrot: 0.032, depth: 0.58}, // show-g6 (far)
+  {vy: -0.024, vx: 0.008, vrot: -0.048, depth: 1.0},  // show-g7 (mid)
+  {vy: -0.036, vx: 0.013, vrot: -0.064, depth: 1.32}, // show-g8 (near)
+  {vy: -0.012, vx: 0.004, vrot: 0.030, depth: 0.55},  // show-g9 (far)
+  {vy: -0.025, vx: 0.007, vrot: 0.054, depth: 1.05},  // show-g10 (mid)
+  {vy: -0.040, vx: 0.014, vrot: -0.070, depth: 1.35}, // show-g11 (near)
+  {vy: -0.011, vx: 0.004, vrot: -0.026, depth: 0.52}  // show-g12 (far)
+];
+const showcaseGrains = [...document.querySelectorAll('.show-grain')].map((el, i) => ({
+  el,
+  ...(showcaseGrainsConfig[i] || {vy: -0.022, vx: 0, vrot: 0.045, depth: 1.0}),
+  rx: 0, ry: 0, rrot: 0,
+  tx: 0, ty: 0, trot: 0
+}));
+const allRepelGrains = [...heroGrains, ...showcaseGrains];
 let pointerX = -9999, pointerY = -9999, heroRepelRaf = 0;
 
 function updateHeroGrainsScroll() {
@@ -840,12 +895,13 @@ function stepHeroGrainsRepel() {
   heroRepelRaf = 0;
   if (reducedMotion.matches) return;
   const baseRadius = 195;
-  const basePush = 46;
+  const basePush = 48;
   let moving = false;
 
-  heroGrains.forEach(g => {
+  allRepelGrains.forEach(g => {
     const rect = g.el.getBoundingClientRect();
     if (!rect.width && !rect.height) return;
+    if (rect.bottom < -120 || rect.top > innerHeight + 120) return;
     // Subtract current repulsion offset so the rest anchor never drifts.
     const anchorX = rect.left + rect.width * 0.5 - g.rx;
     const anchorY = rect.top + rect.height * 0.5 - g.ry;
@@ -1123,4 +1179,267 @@ syncLatestSsielBlogPost();
       if (btn) btn.setAttribute('aria-expanded', 'true');
     });
   }
+})();
+
+// Pinned 5-slide Product Showcase (#range) with scroll-linked progress, watermark fill, grain parallax, and recipe handoff.
+(() => {
+  const showSection = document.querySelector('#range.show-range');
+  if (!showSection) return;
+  const showPin = showSection.querySelector('.show-pin');
+  const showWords = [...showSection.querySelectorAll('.show-word span')];
+  const showPacks = [...showSection.querySelectorAll('.show-pk')];
+  const showLeftTxts = [...showSection.querySelectorAll('.show-l .show-txt')];
+  const showRightTxts = [...showSection.querySelectorAll('.show-r .show-txt')];
+  const showNavBtns = [...showSection.querySelectorAll('.show-nav button')];
+  const showGrains = [...showSection.querySelectorAll('.show-grain')];
+  const showSkip = showSection.querySelector('.show-skip');
+  // Darker shade of each packshot pouch: Super Dubar (deep teal), Super Tibar (deep rosewood), Mogra (deep pewter), Nayaab (imperial emerald), Utsav (midnight sapphire).
+  const showBgs = ['#215452', '#7e3b43', '#3d4147', '#0b2920', '#0d1554'];
+  const supportsCssScrollTimeline = () => !reducedMotion.matches && CSS.supports('animation-timeline: scroll()') && CSS.supports('animation-range: 0% 100%');
+
+  let activeIdx = -1;
+  let showInViewport = true;
+  let showRaf = 0;
+
+  function renderShowcase() {
+    showRaf = 0;
+    const header = filmHeaderHeight();
+    const bounds = showSection.getBoundingClientRect();
+    const screen = Math.max(1, innerHeight - header);
+    const travel = Math.max(1, showSection.offsetHeight - screen);
+    const scrolled = Math.min(travel, Math.max(0, header - bounds.top));
+    const count = showPacks.length;
+    const seg = travel / count;
+    const nextIdx = Math.min(count - 1, Math.max(0, Math.floor(scrolled / Math.max(1, seg))));
+    const segProg = Math.min(1, Math.max(0, (scrolled - nextIdx * seg) / Math.max(1, seg)));
+
+    if (nextIdx !== activeIdx) {
+      activeIdx = nextIdx;
+      showSection.style.setProperty('--show-bg', showBgs[activeIdx] || '#215452');
+      for (let i = 0; i < count; i++) {
+        const isCurrent = i === activeIdx;
+        const isPast = i < activeIdx;
+        showPacks[i]?.classList.toggle('on', isCurrent);
+        showPacks[i]?.classList.toggle('out', isPast);
+        showWords[i]?.classList.toggle('on', isCurrent);
+        showWords[i]?.classList.toggle('out', isPast);
+        showLeftTxts[i]?.classList.toggle('on', isCurrent);
+        showRightTxts[i]?.classList.toggle('on', isCurrent);
+        if (isCurrent) showNavBtns[i]?.setAttribute('aria-current', 'true');
+        else showNavBtns[i]?.removeAttribute('aria-current');
+      }
+    }
+
+    for (let i = 0; i < count; i++) {
+      const fillPct = i < activeIdx ? 100 : i === activeIdx ? segProg * 100 : 0;
+      showWords[i]?.style.setProperty('--fill', `${fillPct.toFixed(1)}%`);
+    }
+
+    if (reducedMotion.matches) {
+      showcaseGrains.forEach(({el}) => {
+        el.style.setProperty('--scroll-x', '0px');
+        el.style.setProperty('--scroll-y', '0px');
+        el.style.setProperty('--scroll-rot', '0deg');
+      });
+    } else {
+      const driftDelta = scrolled - travel * 0.5;
+      showcaseGrains.forEach(g => {
+        g.el.style.setProperty('--scroll-x', `${(driftDelta * g.vx).toFixed(2)}px`);
+        g.el.style.setProperty('--scroll-y', `${(driftDelta * g.vy).toFixed(2)}px`);
+        g.el.style.setProperty('--scroll-rot', `${(driftDelta * g.vrot).toFixed(2)}deg`);
+      });
+    }
+
+    if (!supportsCssScrollTimeline()) {
+      for (let i = 0; i < count; i++) {
+        const barFill = reducedMotion.matches
+          ? (i <= activeIdx ? 1 : 0)
+          : (i < activeIdx ? 1 : i === activeIdx ? segProg : 0);
+        showNavBtns[i]?.style.setProperty('--f', barFill.toFixed(3));
+      }
+    }
+  }
+
+  function scheduleShowcase() {
+    if (!showInViewport || showRaf) return;
+    showRaf = requestAnimationFrame(renderShowcase);
+  }
+
+  showNavBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.showSlide) || 0;
+      const header = filmHeaderHeight();
+      const screen = Math.max(1, innerHeight - header);
+      const travel = Math.max(1, showSection.offsetHeight - screen);
+      const seg = travel / showPacks.length;
+      const sectionStart = window.scrollY + showSection.getBoundingClientRect().top - header;
+      window.scrollTo({
+        top: sectionStart + (idx + 0.38) * seg,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth'
+      });
+    });
+  });
+
+  showSkip?.addEventListener('click', () => {
+    const header = filmHeaderHeight();
+    const nextSection = document.getElementById('quality');
+    const targetTop = nextSection
+      ? window.scrollY + nextSection.getBoundingClientRect().top - header
+      : window.scrollY + showSection.getBoundingClientRect().bottom - header;
+    window.scrollTo({
+      top: targetTop,
+      behavior: reducedMotion.matches ? 'auto' : 'smooth'
+    });
+  });
+
+  showSection.querySelectorAll('.show-cta[data-cook-target]').forEach(cta => {
+    cta.addEventListener('click', () => {
+      const dish = cta.dataset.cookTarget;
+      const dishBtn = document.querySelector(`#styles button[data-style="${dish}"]`);
+      dishBtn?.click();
+    });
+  });
+
+  const showObserver = new IntersectionObserver(entries => {
+    const wasActive = showInViewport;
+    showInViewport = entries[0].isIntersecting;
+    if (showInViewport && !wasActive) renderShowcase();
+  }, {rootMargin: '350px 0px'});
+  showObserver.observe(showSection);
+
+  window.addEventListener('scroll', scheduleShowcase, {passive: true});
+  window.addEventListener('resize', () => {
+    renderShowcase();
+  });
+  renderShowcase();
+})();
+
+// Pinned 5-card "Field to Fork" section (#field-to-fork) with stacking cards, clickable stage rail, video lifecycle, and Taraori world-map wipe.
+(() => {
+  const ftfSection = document.querySelector('#field-to-fork.ftf');
+  if (!ftfSection) return;
+  const cards = [...ftfSection.querySelectorAll('.fc')];
+  const railItems = [...ftfSection.querySelectorAll('.ftf-rail li')];
+  const stepBtns = [...ftfSection.querySelectorAll('.ftf-step')];
+  const railLine = ftfSection.querySelector('.ftf-line');
+  const mapWipe = ftfSection.querySelector('#ftf-map-wipe');
+  const cardVideos = cards.map(card => card.querySelector('video.fc-vid'));
+  const supportsCssScrollTimeline = () => !reducedMotion.matches && CSS.supports('animation-timeline: scroll()') && CSS.supports('animation-range: 0% 100%');
+
+  let activeIdx = -1;
+  let ftfInViewport = false;
+  let ftfRaf = 0;
+
+  function syncVideos(enters, unders) {
+    cardVideos.forEach((vid, i) => {
+      if (!vid) return;
+      const shouldPlay = ftfInViewport && !reducedMotion.matches && enters[i] < 0.96 && unders[i] < 0.96;
+      if (shouldPlay) {
+        if (vid.paused) vid.play().catch(() => {});
+      } else if (!vid.paused) {
+        vid.pause();
+      }
+    });
+  }
+
+  function renderFieldToFork() {
+    ftfRaf = 0;
+    const header = filmHeaderHeight();
+    const bounds = ftfSection.getBoundingClientRect();
+    const screen = Math.max(1, innerHeight - header);
+    const travel = Math.max(1, ftfSection.offsetHeight - screen);
+    const scrolled = Math.min(travel, Math.max(0, header - bounds.top));
+    const rawP = scrolled / travel;
+    const normP = Math.min(1, Math.max(0, (rawP - 0.04) / 0.92));
+    const lastIdx = cards.length - 1;
+    const u = normP * lastIdx;
+
+    const enters = [];
+    const unders = [];
+    let nextIdx = 0;
+
+    for (let k = 0; k <= lastIdx; k++) {
+      const enter = k === 0 ? 0 : Math.min(1, Math.max(0, k - u));
+      const under = k === lastIdx ? 0 : Math.min(1, Math.max(0, u - k));
+      enters.push(enter);
+      unders.push(under);
+      cards[k].style.setProperty('--enter', enter.toFixed(4));
+      cards[k].style.setProperty('--under', under.toFixed(4));
+      if (k > 0 && u >= k - 0.45) nextIdx = k;
+    }
+
+    if (nextIdx !== activeIdx) {
+      activeIdx = nextIdx;
+      for (let k = 0; k <= lastIdx; k++) {
+        const isCurrent = k === activeIdx;
+        const isDone = k < activeIdx;
+        cards[k].classList.toggle('on', isCurrent);
+        railItems[k]?.classList.toggle('on', isCurrent);
+        railItems[k]?.classList.toggle('done', isDone);
+        if (isCurrent) stepBtns[k]?.setAttribute('aria-current', 'step');
+        else stepBtns[k]?.removeAttribute('aria-current');
+      }
+    }
+
+    if (!supportsCssScrollTimeline() && railLine) {
+      railLine.style.setProperty('--rp', normP.toFixed(4));
+    }
+
+    if (mapWipe) {
+      if (reducedMotion.matches) {
+        mapWipe.setAttribute('r', '1050');
+      } else {
+        const enterMap = enters[lastIdx] ?? 1;
+        const wipeLin = Math.min(1, Math.max(0, (1 - enterMap) * 1.22));
+        const wipeEase = wipeLin * (2 - wipeLin);
+        mapWipe.setAttribute('r', (wipeEase * 1050).toFixed(1));
+      }
+    }
+
+    syncVideos(enters, unders);
+  }
+
+  function scheduleFieldToFork() {
+    if (!ftfInViewport || ftfRaf) return;
+    ftfRaf = requestAnimationFrame(renderFieldToFork);
+  }
+
+  stepBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = Math.min(cards.length - 1, Math.max(0, Number(btn.dataset.ftfStep) || 0));
+      const header = filmHeaderHeight();
+      const screen = Math.max(1, innerHeight - header);
+      const travel = Math.max(1, ftfSection.offsetHeight - screen);
+      const sectionStart = window.scrollY + ftfSection.getBoundingClientRect().top - header;
+      const lastIdx = Math.max(1, cards.length - 1);
+      const targetP = k === 0 ? 0.02 : k === lastIdx ? 0.98 : 0.04 + (k / lastIdx) * 0.92;
+      window.scrollTo({
+        top: sectionStart + targetP * travel,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth'
+      });
+    });
+  });
+
+  const ftfObserver = new IntersectionObserver(entries => {
+    const wasActive = ftfInViewport;
+    ftfInViewport = entries[0].isIntersecting;
+    if (ftfInViewport && !wasActive) {
+      renderFieldToFork();
+    } else if (!ftfInViewport && wasActive) {
+      cardVideos.forEach(vid => {
+        if (vid && !vid.paused) vid.pause();
+      });
+    }
+  }, {rootMargin: '300px 0px'});
+  ftfObserver.observe(ftfSection);
+
+  reducedMotion.addEventListener('change', () => {
+    renderFieldToFork();
+  });
+
+  window.addEventListener('scroll', scheduleFieldToFork, {passive: true});
+  window.addEventListener('resize', () => {
+    renderFieldToFork();
+  });
+  renderFieldToFork();
 })();
